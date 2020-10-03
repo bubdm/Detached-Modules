@@ -22,5 +22,12 @@ namespace Detached.Modules.EntityFramework
         {
             components.Add(new DataFileComponent<TDbContext, TEntity> { Path = filePath });
         }
+
+        public static void AddDataFile<TDbContext, TEntity>(this DetachedComponentCollection components)
+           where TDbContext : DbContext
+           where TEntity : class
+        {
+            components.Add(new DataFileComponent<TDbContext, TEntity> { });
+        }
     }
 }

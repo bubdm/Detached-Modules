@@ -1,11 +1,7 @@
-﻿using Detached.Mappers;
-using Detached.Mappers.EntityFramework;
+﻿using Detached.Mappers.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Detached.Modules.EntityFramework
@@ -31,7 +27,11 @@ namespace Detached.Modules.EntityFramework
 
         public override async Task UpdateDataAsync(DbContext dbContext)
         {
-            using (Stream fileStream = File.OpenRead(Path))
+            string path = Path;
+            if (path == null)
+                path = $"Modules/{Module.Name}/DataAccess/InitialData/{typeof(TEntity).Name}Data.json";
+
+            using (Stream fileStream = File.OpenRead(path))
             {
                 await dbContext.ImportJsonAsync<TEntity>(fileStream);
             }
