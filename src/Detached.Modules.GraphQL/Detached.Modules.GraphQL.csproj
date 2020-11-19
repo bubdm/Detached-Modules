@@ -3,22 +3,22 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <Version>5.0.0-rc.1.20451.14</Version>
+    <Version>5.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/leonardoporro/Detached-Modules</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HotChocolate" Version="10.5.2" />
-    <PackageReference Include="HotChocolate.AspNetCore" Version="10.5.2" />
-    <PackageReference Include="HotChocolate.AspNetCore.Abstractions" Version="10.5.2" />
-    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="10.5.2" />
-    <PackageReference Include="HotChocolate.AspNetCore.HttpPost" Version="10.5.2" />
-    <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="10.5.2" />
-    <PackageReference Include="HotChocolate.AspNetCore.Voyager" Version="10.5.2" />
-    <PackageReference Include="HotChocolate.Types.Filters" Version="10.5.2" />
-    <PackageReference Include="HotChocolate.Types.Selections" Version="10.5.2" />
-    <PackageReference Include="HotChocolate.Types.Sorting" Version="10.5.2" />
+    <PackageReference Include="HotChocolate" Version="10.5.4" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="10.5.4" />
+    <PackageReference Include="HotChocolate.AspNetCore.Abstractions" Version="10.5.4" />
+    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="10.5.4" />
+    <PackageReference Include="HotChocolate.AspNetCore.HttpPost" Version="10.5.4" />
+    <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="10.5.4" />
+    <PackageReference Include="HotChocolate.AspNetCore.Voyager" Version="10.5.4" />
+    <PackageReference Include="HotChocolate.Types.Filters" Version="10.5.4" />
+    <PackageReference Include="HotChocolate.Types.Selections" Version="10.5.4" />
+    <PackageReference Include="HotChocolate.Types.Sorting" Version="10.5.4" />
   </ItemGroup>
 
   <ItemGroup>
