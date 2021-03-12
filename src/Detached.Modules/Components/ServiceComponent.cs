@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Detached.Modules
+namespace Detached.Modules.Components
 {
-    public class DetachedServiceComponent : DetachedComponent
+    public class ServiceComponent : Component
     {
         readonly ServiceDescriptor _serviceDescriptor;
 
-        public DetachedServiceComponent(ServiceDescriptor serviceDescriptor)
+        public ServiceComponent(ServiceDescriptor serviceDescriptor)
         {
             _serviceDescriptor = serviceDescriptor;
         }

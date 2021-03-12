@@ -1,32 +1,38 @@
-﻿using HotChocolate;
-using QuickApi.Services;
+﻿using Detached.Modules.GraphQL.TypeExtensions;
+using Detached.Modules.GraphQL.Validation;
+using HotChocolate;
+using HotChocolate.Execution.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 
 namespace Detached.Modules.GraphQL
 {
     public static class Package
     {
-        public static void AddMutation<TMutation>(this DetachedComponentCollection components)
+        public static void AddMutation<TMutation>(this ComponentCollection components)
         {
             components.Add(new GraphQLComponent { ComponentType = typeof(MutationTypeExtension<TMutation>) });
         }
 
-        public static void AddQuery<TQuery>(this DetachedComponentCollection components)
+        public static void AddQuery<TQuery>(this ComponentCollection components)
         {
             components.Add(new GraphQLComponent { ComponentType = typeof(QueryTypeExtension<TQuery>) });
         }
 
-        public static ISchemaBuilder UseApplication(this ISchemaBuilder schemaBuilder, DetachedApplication app)
+        public static IRequestExecutorBuilder AddApplication(this IRequestExecutorBuilder builder, Application app)
         {
-            foreach (DetachedModule module in app.Modules)
+            foreach (Module module in app.Modules)
             {
                 foreach (GraphQLComponent component in module.Components.OfType<GraphQLComponent>())
                 {
-                    schemaBuilder.AddType(component.ComponentType);
+                    builder.AddType(component.ComponentType);
                 }
             }
 
-            return schemaBuilder;
+            builder.UseField<InputValidationMiddleware>();
+            
+
+            return builder;
         }
     }
 }

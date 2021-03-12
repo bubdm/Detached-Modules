@@ -7,9 +7,9 @@ using System.Reflection;
 
 namespace Detached.Modules.EntityFramework
 {
-    public class RepositoryComponent : DetachedComponent
+    public class EFRepositoryComponent : Component
     {
-        public RepositoryComponent(Type repositoryType)
+        public EFRepositoryComponent(Type repositoryType)
         {
             RepositoryType = repositoryType;
 

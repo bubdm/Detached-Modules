@@ -6,18 +6,18 @@ namespace Detached.Modules.EntityFramework.DbContextExtension
 {
     public class DetachedModulesModelCustomizer : IModelCustomizer
     {
-        readonly DetachedApplication _app;
+        readonly Application _app;
 
-        public DetachedModulesModelCustomizer(DetachedApplication app)
+        public DetachedModulesModelCustomizer(Application app)
         {
             _app = app;
         }
 
         public void Customize(ModelBuilder modelBuilder, DbContext context)
         {
-            foreach (DetachedModule module in _app.Modules)
+            foreach (Module module in _app.Modules)
             {
-                foreach (RepositoryComponent component in module.Components.OfType<RepositoryComponent>())
+                foreach (EFRepositoryComponent component in module.Components.OfType<EFRepositoryComponent>())
                 {
                     component.ConfigureModel(context, modelBuilder);
                 }

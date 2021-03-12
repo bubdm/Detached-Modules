@@ -2,22 +2,22 @@
 
 namespace Detached.Modules
 {
-    public class DetachedModuleCollection : Collection<DetachedModule>
+    public class ModuleCollection : Collection<Module>
     {
-        readonly DetachedApplication _app;
+        readonly Application _app;
 
-        public DetachedModuleCollection(DetachedApplication app)
+        public ModuleCollection(Application app)
         {
             _app = app;
         }
 
-        protected override void InsertItem(int index, DetachedModule item)
+        protected override void InsertItem(int index, Module item)
         {
             base.InsertItem(index, item);
             item.Application = _app;
         }
 
-        protected override void SetItem(int index, DetachedModule item)
+        protected override void SetItem(int index, Module item)
         {
             base.SetItem(index, item);
             item.Application = _app;

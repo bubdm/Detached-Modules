@@ -9,16 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HotChocolate" Version="10.5.4" />
-    <PackageReference Include="HotChocolate.AspNetCore" Version="10.5.4" />
-    <PackageReference Include="HotChocolate.AspNetCore.Abstractions" Version="10.5.4" />
-    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="10.5.4" />
-    <PackageReference Include="HotChocolate.AspNetCore.HttpPost" Version="10.5.4" />
-    <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="10.5.4" />
-    <PackageReference Include="HotChocolate.AspNetCore.Voyager" Version="10.5.4" />
-    <PackageReference Include="HotChocolate.Types.Filters" Version="10.5.4" />
-    <PackageReference Include="HotChocolate.Types.Selections" Version="10.5.4" />
-    <PackageReference Include="HotChocolate.Types.Sorting" Version="10.5.4" />
+    <PackageReference Include="FairyBread" Version="3.0.0" />
+    <PackageReference Include="HotChocolate" Version="11.0.0" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="11.0.0" />
+    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="11.0.0" />
+    <PackageReference Include="HotChocolate.Data" Version="11.0.0" />
+    <PackageReference Include="HotChocolate.Types" Version="11.0.0" />
+    <PackageReference Include="HotChocolate.Types.Filters" Version="11.0.0" />
+    <PackageReference Include="HotChocolate.Types.Sorting" Version="11.0.0" />
+ 
   </ItemGroup>
 
   <ItemGroup>

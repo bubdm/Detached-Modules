@@ -1,6 +1,6 @@
 ﻿using HotChocolate.Types;
 
-namespace QuickApi.Services
+namespace Detached.Modules.GraphQL.Extensions
 {
     public class MutationTypeExtension<T> : ObjectTypeExtension<T>
     {

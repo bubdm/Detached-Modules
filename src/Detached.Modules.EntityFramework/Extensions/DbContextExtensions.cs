@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Detached.Modules.EntityFramework.Extensions
@@ -9,14 +8,13 @@ namespace Detached.Modules.EntityFramework.Extensions
     {
         public static async Task UpdateDataAsync(this DbContext dbContext)
         {
-            DetachedApplication app = dbContext.GetService<DetachedApplication>();
-            JsonSerializerOptions jsonSerializerOptions = dbContext.GetService<JsonSerializerOptions>();
+            Application app = dbContext.GetService<Application>();
 
-            foreach (DetachedModule module in app.Modules)
+            foreach (Module module in app.Modules)
             {
-                foreach (DetachedComponent component in module.Components)
+                foreach (Component component in module.Components)
                 {
-                    if (component is DataFileComponent dataFile
+                    if (component is EFSeedFileComponent dataFile
                        && dataFile.DbContextType == dbContext.GetType())
                     {
                         await dataFile.UpdateDataAsync(dbContext);

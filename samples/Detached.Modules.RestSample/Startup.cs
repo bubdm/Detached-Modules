@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Detached.Modules.RestSample
 {
-    public class Startup : DetachedApplication
+    public class Startup : Application
     {
         public Startup(IConfiguration configuration, IHostEnvironment environment)
             : base(configuration, environment)

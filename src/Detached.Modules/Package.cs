@@ -1,42 +1,43 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Detached.Modules.Components;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace Detached.Modules
 {
     public static class Package
     {
-        public static void AddService<TService>(this DetachedComponentCollection components, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+        public static void AddService<TService>(this ComponentCollection components, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
-            components.Add(new DetachedServiceComponent(new ServiceDescriptor(typeof(TService), typeof(TService), serviceLifetime)));
+            components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TService), typeof(TService), serviceLifetime)));
         }
 
-        public static void AddService<TContract, TService>(this DetachedComponentCollection components, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+        public static void AddService<TContract, TService>(this ComponentCollection components, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
-            components.Add(new DetachedServiceComponent(new ServiceDescriptor(typeof(TContract), typeof(TService), serviceLifetime)));
+            components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TContract), typeof(TService), serviceLifetime)));
         }
 
-        public static void AddService<TContract, TService>(this DetachedComponentCollection components, TService instance)
+        public static void AddService<TContract, TService>(this ComponentCollection components, TService instance)
         {
-            components.Add(new DetachedServiceComponent(new ServiceDescriptor(typeof(TContract), instance)));
+            components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TContract), instance)));
         }
 
-        public static void AddService<TService>(this DetachedComponentCollection components, TService instance)
+        public static void AddService<TService>(this ComponentCollection components, TService instance)
         {
-            components.Add(new DetachedServiceComponent(new ServiceDescriptor(typeof(TService), instance)));
+            components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TService), instance)));
         }
 
-        public static void AddOptions<TOptions>(this DetachedComponentCollection components)
+        public static void AddOptions<TOptions>(this ComponentCollection components)
             where TOptions : class, new()
         {
-            components.Add(new DetachedOptionsComponent<TOptions>());
+            components.Add(new OptionsComponent<TOptions>());
         }
 
-        public static TOptions GetOptions<TOptions>(this DetachedComponentCollection components)
+        public static TOptions GetOptions<TOptions>(this ComponentCollection components)
            where TOptions : class, new()
         {
-            foreach (DetachedComponent component in components)
+            foreach (Component component in components)
             {
-                if (component is DetachedOptionsComponent<TOptions> optionsComponent)
+                if (component is OptionsComponent<TOptions> optionsComponent)
                 {
                     return optionsComponent.GetValue();
                 }

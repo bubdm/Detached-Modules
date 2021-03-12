@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace Detached.Modules.EntityFramework.DbContextExtension
 {
-    public class DetacheModulesMapperCustomizer : IMapperCustomizer
+    public class ModulesMapperCustomizer : IMapperCustomizer
     {
         readonly Application _app;
 
-        public DetacheModulesMapperCustomizer(Application app)
+        public ModulesMapperCustomizer(Application app)
         {
             _app = app;
         }

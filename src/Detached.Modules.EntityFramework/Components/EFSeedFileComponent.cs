@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Detached.Modules.EntityFramework
 {
-    public abstract class DataFileComponent : DetachedComponent
+    public abstract class EFSeedFileComponent : Component
     {
         public string Path { get; set; }
 
@@ -17,7 +17,7 @@ namespace Detached.Modules.EntityFramework
         public abstract Task UpdateDataAsync(DbContext dbContext);
     }
 
-    public class DataFileComponent<TDbContext, TEntity> : DataFileComponent
+    public class EFSeedFileComponent<TDbContext, TEntity> : EFSeedFileComponent
         where TDbContext : DbContext
         where TEntity : class
     {

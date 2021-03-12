@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Detached.Modules
+namespace Detached.Modules.Components
 {
-    public class DetachedOptionsComponent<TOptions> : DetachedComponent
+    public class OptionsComponent<TOptions> : Component
         where TOptions : class, new()
     {
-        public DetachedOptionsComponent(string name = null)
+        public OptionsComponent(string name = null)
         {
             Name = name ?? typeof(TOptions).Name.Replace("Options", "");
         }

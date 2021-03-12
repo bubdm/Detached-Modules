@@ -4,13 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Detached.Modules.EntityFramework.DbContextExtension
 {
-    public class DetachedModulesDbContextOptionsExtension : IDbContextOptionsExtension
+    public class ModulesDbContextOptionsExtension : IDbContextOptionsExtension
     {
         readonly Application _application;
 
-        public DetachedModulesDbContextOptionsExtension(Application application)
+        public ModulesDbContextOptionsExtension(Application application)
         {
-            Info = new DetachedModulesDbContextOptionsExtensionInfo(this);
+            Info = new ModulesDbContextOptionsExtensionInfo(this, application);
             _application = application;
         }
 
@@ -19,8 +19,8 @@ namespace Detached.Modules.EntityFramework.DbContextExtension
         public void ApplyServices(IServiceCollection services)
         {
             services.AddSingleton(_application);
-            services.AddScoped<IModelCustomizer>(sp => new DetachedModulesModelCustomizer(_application));
-            services.AddScoped<IMapperCustomizer>(sp => new DetacheModulesMapperCustomizer(_application));
+            services.AddScoped<IModelCustomizer>(sp => new ModulesModelCustomizer(_application));
+            services.AddScoped<IMapperCustomizer>(sp => new ModulesMapperCustomizer(_application));
         }
 
         public void Validate(IDbContextOptions options)

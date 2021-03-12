@@ -4,16 +4,16 @@ using Microsoft.Extensions.Hosting;
 
 namespace Detached.Modules
 {
-    public class DetachedApplication
+    public class Application
     {
-        public DetachedApplication(IConfiguration configuration, IHostEnvironment environment)
+        public Application(IConfiguration configuration, IHostEnvironment environment)
         {
-            Modules = new DetachedModuleCollection(this);
+            Modules = new ModuleCollection(this);
             Configuration = configuration;
             Environment = environment;
         }
 
-        public DetachedModuleCollection Modules { get; }
+        public ModuleCollection Modules { get; }
 
         public IConfiguration Configuration { get; }
 
@@ -23,11 +23,11 @@ namespace Detached.Modules
         {
             services.AddSingleton(this);
 
-            foreach (DetachedModule module in Modules)
+            foreach (Module module in Modules)
             {
                 module.ConfigureServices(services);
 
-                foreach (DetachedComponent component in module.Components)
+                foreach (Component component in module.Components)
                 {
                     component.ConfigureServices(services);
                 }

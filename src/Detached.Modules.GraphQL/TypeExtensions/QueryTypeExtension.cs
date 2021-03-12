@@ -1,6 +1,6 @@
 ﻿using HotChocolate.Types;
 
-namespace QuickApi.Services
+namespace Detached.Modules.GraphQL.TypeExtensions
 {
     public class QueryTypeExtension<T> : ObjectTypeExtension<T>
     {
