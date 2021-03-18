@@ -93,7 +93,7 @@ public class ServiceComponent : IComponent
 }
 ```
 
-Other components do not register services, another tool finds them and uses the data to perform actions.
+Other components do not register services, a tool finds them and uses the data to perform actions.
 For example, SeedFile. A tool looks for Components of type SeedFile and executes UpdateDataAsync method. There are no services registered
 to the IServiceCollection instance, however a Seed File is a valid component and an useful part of an application.
 (More info on Components below).
@@ -120,7 +120,96 @@ public class SeedFileComponent<TDbContext, TEntity> : SeedFileComponent
 ```
 
 ## Entity Framework Components
+These Components allows to distribute Entity Framework mapping and provides extra functionality.
 
+###### DbContext Component
+Allows to define a DbContext for the current Module and all the descendants, if any. 
+It also configures [Detached.Mappers](https://github.com/leonardoporro/Detached-Mapper) library. 
+
+Child modules can add entities or change mapping through the Mapping or the Repository Component.
+
+In order to add a DbContext, call AddDbContext on the Module that will contain it (usually, the root module).
+Then, configure EF in the same way as if it were added directly to the IServiceCollection.
+
+```csharp
+Module module = new Module();
+module.AddDbContext<MyDbContext>(cfg =>
+{
+    // configure here any db.
+});
+```
+
+The DbContext will be registered to the IServiceCollection, so in order to use it just inject it as usual.
+
+###### Mapping Component
+Allows Modules and child Modules to add/modify/configure entities for a given DbContext and MappingOptions for [Detached.Mappers](https://github.com/leonardoporro/Detached-Mapper).
+To define a mapping add any of ConfigureModel(ModelBuilder) or ConfigureMapper(MapperOptions) methods, and it is recommended but not 
+mandatory to inherit from Mapping class.
+
+```csharp
+public class MyMapping
+{
+    public void ConfigureModel(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TestMappingEntity>().Property(t => t.Id).HasAnnotation("test annotation", true);
+    }
+
+    public void ConfigureMapper(MapperOptions mapperOptions)
+    {
+        mapperOptions.Configure<TestMappingEntity>().Member(t => t.Name).IsKey();
+    }
+}
+
+```
+Then, call AddMapping on the Module that requires it, passing the mapping type and the type of DbContext to apply the mapping to it.
+
+```csharp
+module.AddMapping<MyDbContext, MyMapping>();
+```
+###### Repository Component
+Registers the given class to the IServiceCollection container to be injected later
+and also allows adding the ConfigureModel(ModelBuilder) or ConfigureMapper(MapperOptions) methods, so a separate Mapping is not needed.
+Repositories requires a constructor with a single parameter of the type of the DbContext that the repository is going to work on. This parameter
+is used to instantiate the repository and to infer the type of DbContext to process when applying the mappings.
+In order to create a repository, add a class, create a constructor with a single parameter receiving the DbContext and (optionally) add ConfigureModel(ModelBuilder) and/or ConfigureMapper(MapperOptions) methods.
+Inheriting from Repository<,> is recommended but not mandatory.
+When inheriting from Repository<,> the entity passed as the second generic argument is automatically added to the DbContext model, in all the other
+cases the DbSet<MyEntity> property must be added or the call to modelBuilder.Entity<MyEntity> must be made.
+
+```csharp
+public class MyRepository
+{
+    public MyRepository(MyDbContext dbContext)
+    {
+    }
+
+    public void ConfigureModel(ModelBuilder modelBuilder)
+    {
+    }
+
+    public void ConfigureMapper(MapperOptions mapperOptions)
+    {
+    }
+}
+
+public class MyRepository : Repository<MyDbContext, MyEntity>
+{
+    public MyRepository(MyDbContext dbContext)
+        : base(dbContext)
+    {
+    }
+
+    public override void ConfigureModel(ModelBuilder modelBuilder)
+    {
+    }
+
+    public override void ConfigureMapper(MapperOptions mapperOptions)
+    {
+    }
+}
+```
+
+###### Seed File Component
 
 
 
