@@ -14,22 +14,25 @@ namespace Detached.Modules.RestSample
 {
     public class Startup
     {
-        Application _app;
-
         public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
-            _app = new Application(configuration, environment);
-
-            _app.AddModule(new SecurityModule());
-            _app.AddDbContext<MainDbContext>(cfg =>
-            {
-                cfg.UseSqlite($"Data Source={Path.GetTempPath()}\\detached.db");
-            });
+            Configuration = configuration;
+            HostEnviornment = environment;
         }
+
+        public IConfiguration Configuration { get; }
+
+        public IHostEnvironment HostEnviornment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            _app.ConfigureServices(services);
+            IModule app = new Module { Name = "Application" };
+            app.AddModule(new SecurityModule());
+            app.AddDbContext<MainDbContext>(cfg =>
+            {
+                cfg.UseSqlite($"Data Source={Path.GetTempPath()}\\detached.db");
+            });
+            app.ConfigureServices(services, Configuration, HostEnviornment);
 
             services.AddControllers();
         }
@@ -45,6 +48,7 @@ namespace Detached.Modules.RestSample
                 endpoints.MapControllers();
             });
 
+            // don't do this in production code!
             InitializeDbAsync(dbContext).GetAwaiter().GetResult();
         }
 

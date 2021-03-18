@@ -8,21 +8,21 @@ namespace Detached.Modules.EntityFramework.Extensions
 {
     public class DbContextOptionsExtension : IDbContextOptionsExtension
     {
-        readonly Application _application;
+        readonly IModule _module;
 
-        public DbContextOptionsExtension(Application application)
+        public DbContextOptionsExtension(IModule module)
         {
-            Info = new DbContextOptionsExtensionInfo(this, application);
-            _application = application;
+            Info = new DbContextOptionsExtensionInfo(this, module);
+            _module = module;
         }
 
         public Microsoft.EntityFrameworkCore.Infrastructure.DbContextOptionsExtensionInfo Info { get; }
 
         public void ApplyServices(IServiceCollection services)
         {
-            services.AddSingleton(_application);
-            services.AddScoped<IModelCustomizer>(sp => new ModelCustomizer(_application));
-            services.AddScoped<IMapperCustomizer>(sp => new MapperCustomizer(_application));
+            services.AddSingleton(_module);
+            services.AddScoped<IModelCustomizer>(sp => new ModelCustomizer(_module));
+            services.AddScoped<IMapperCustomizer>(sp => new MapperCustomizer(_module));
         }
 
         public void Validate(IDbContextOptions options)

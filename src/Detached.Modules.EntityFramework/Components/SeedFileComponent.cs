@@ -1,5 +1,8 @@
 ﻿using Detached.Mappers.EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 using System.Text;
@@ -19,6 +22,10 @@ namespace Detached.Modules.EntityFramework
 
         public abstract Type EntityType { get; }
 
+        public void ConfigureServices(IModule module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+        {
+        }
+
         public abstract Task UpdateDataAsync(DbContext dbContext);
     }
 
@@ -37,7 +44,6 @@ namespace Detached.Modules.EntityFramework
             if (string.IsNullOrEmpty(path))
             {
                 StringBuilder pathBuilder = new StringBuilder(DefaultFilePath);
-                pathBuilder.Replace("{ApplicationName}", Module.Application.Name);
                 pathBuilder.Replace("{ModuleName}", Module.Name);
                 pathBuilder.Replace("{EntityName}", typeof(TEntity).Name);
                 path = pathBuilder.ToString();

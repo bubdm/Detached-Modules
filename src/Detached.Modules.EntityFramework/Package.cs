@@ -16,9 +16,9 @@ namespace Detached.Modules.EntityFramework
             module.Components.Add(new DbContextComponent<TDbContext>(configure));
         }
 
-        public static void UseApplication(this DbContextOptionsBuilder builder, Application app)
+        public static void UseModule(this DbContextOptionsBuilder builder, IModule module)
         {
-            ((IDbContextOptionsBuilderInfrastructure)builder).AddOrUpdateExtension(new DbContextOptionsExtension(app));
+            ((IDbContextOptionsBuilderInfrastructure)builder).AddOrUpdateExtension(new DbContextOptionsExtension(module));
         }
 
         public static void AddRepository<TRepository>(this IModule module)

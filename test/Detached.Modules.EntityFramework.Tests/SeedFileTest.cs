@@ -1,10 +1,7 @@
 ﻿using Detached.Modules.EntityFramework.Extensions;
-using Detached.Modules.EntityFramework.Tests.Mocks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,24 +15,21 @@ namespace Detached.Modules.EntityFramework.Tests
         public async Task TestSeedFiles()
         {
             // GIVEN a configured application
-            IConfiguration configuration = new ConfigurationBuilder().Build();
-            IHostEnvironment hostEnvironment = new HostEnvironmentMock();
-
-            Application app = new Application(configuration, hostEnvironment);
+            IModule module = new Module();
 
             // GIVEN a db context
-            app.AddDbContext<TestSeedFileDbContext>(cfg =>
+            module.AddDbContext<TestSeedFileDbContext>(cfg =>
             {
                 var connection = new SqliteConnection($"DataSource=file:TestSeedFiles?mode=memory&cache=shared");
                 connection.Open();
                 cfg.UseSqlite(connection);
             });
 
-            app.AddSeedFile<TestSeedFileDbContext, TestSeedFileEntity>("SeedFile.json");
+            module.AddSeedFile<TestSeedFileDbContext, TestSeedFileEntity>("SeedFile.json");
 
             // WHEN the application is built
             IServiceCollection services = new ServiceCollection();
-            app.ConfigureServices(services);
+            module.ConfigureServices(services, null, null);
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 

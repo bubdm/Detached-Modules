@@ -7,41 +7,32 @@ namespace Detached.Modules.EntityFramework.DbContextExtension
 {
     public class MapperCustomizer : IMapperCustomizer
     {
-        readonly Application _app;
+        readonly IModule _module;
 
-        public MapperCustomizer(Application app)
+        public MapperCustomizer(IModule module)
         {
-            _app = app;
+            _module = module;
         }
 
         public void Customize(DbContext dbContext, MapperOptions mapperOptions)
         {
-            foreach (IComponent component in _app.Components)
+            foreach (IComponent component in _module.GetAllComponents())
             {
-                ConfigureComponent(dbContext, mapperOptions, component);
-            }
-
-            foreach (Module module in _app.Modules)
-            {
-                foreach (IComponent component in _app.Components)
+                switch (component)
                 {
-                    ConfigureComponent(dbContext, mapperOptions, component);
+                    case RepositoryComponent repo:
+                        if (repo.DbContextType == dbContext.GetType())
+                        {
+                            repo.ConfigureMapper(dbContext, mapperOptions);
+                        }
+                        break;
+                    case MappingComponent mapping:
+                        if (mapping.DbContextType == dbContext.GetType())
+                        {
+                            mapping.ConfigureMapper(mapperOptions);
+                        }
+                        break;
                 }
-            }
-        }
-
-        void ConfigureComponent(DbContext dbContext, MapperOptions mapperOptions, IComponent component)
-        {
-            switch (component)
-            {
-                case RepositoryComponent repo:
-                    if (repo.DbContextType == dbContext.GetType())
-                        repo.ConfigureMapper(dbContext, mapperOptions);
-                    break;
-                case MappingComponent mapping:
-                    if (mapping.DbContextType == dbContext.GetType())
-                        mapping.ConfigureMapper(mapperOptions);
-                    break;
             }
         }
     }

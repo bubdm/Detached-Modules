@@ -5,19 +5,19 @@ namespace Detached.Modules.EntityFramework.Extensions
 {
     public class DbContextOptionsExtensionInfo : Microsoft.EntityFrameworkCore.Infrastructure.DbContextOptionsExtensionInfo
     {
-        readonly Application _application;
+        readonly IModule _module;
 
-        public DbContextOptionsExtensionInfo(IDbContextOptionsExtension extension, Application application)
+        public DbContextOptionsExtensionInfo(IDbContextOptionsExtension extension, IModule module)
             : base(extension)
         {
-            _application = application;
+            _module = module;
         }
 
         public override bool IsDatabaseProvider => false;
 
         public override string LogFragment => nameof(DbContextOptionsExtensionInfo);
 
-        public override long GetServiceProviderHashCode() => _application.GetHashCode();
+        public override long GetServiceProviderHashCode() => _module.GetHashCode();
 
         public override void PopulateDebugInfo(IDictionary<string, string> debugInfo)
         {

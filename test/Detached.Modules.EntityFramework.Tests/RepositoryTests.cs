@@ -1,13 +1,10 @@
 ﻿using Detached.Mappers;
 using Detached.Mappers.Model;
-using Detached.Modules.EntityFramework.Tests.Mocks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
 using Xunit;
 
@@ -18,14 +15,11 @@ namespace Detached.Modules.EntityFramework.Tests
         [Fact]
         public void TestRepositoryMapping()
         {
-            // GIVEN a configured application
-            IConfiguration configuration = new ConfigurationBuilder().Build();
-            IHostEnvironment hostEnvironment = new HostEnvironmentMock();
-
-            Application app = new Application(configuration, hostEnvironment);
+            // GIVEN a configured module
+            IModule module = new Module();
 
             // GIVEN a db context
-            app.AddDbContext<TestRepositoryDbContext>(cfg =>
+            module.AddDbContext<TestRepositoryDbContext>(cfg =>
             {
                 var connection = new SqliteConnection($"DataSource=file:TestRepository?mode=memory&cache=shared");
                 connection.Open();
@@ -33,11 +27,11 @@ namespace Detached.Modules.EntityFramework.Tests
             });
 
             // GIVEN a repository with model configuration
-            app.AddRepository<TestRepository>();
+            module.AddRepository<TestRepository>();
 
             // WHEN application and services are initialized
             IServiceCollection services = new ServiceCollection();
-            app.ConfigureServices(services);
+            module.ConfigureServices(services, null, null);
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
             TestRepositoryDbContext dbContext = serviceProvider.GetService<TestRepositoryDbContext>();

@@ -3,7 +3,6 @@ using Detached.Modules.GraphQL.Validation;
 using HotChocolate;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 
 namespace Detached.Modules.GraphQL
 {
@@ -19,13 +18,13 @@ namespace Detached.Modules.GraphQL
             module.Components.Add(new GraphQLComponent { ImplementationType = typeof(QueryTypeExtension<TQuery>) });
         }
 
-        public static IRequestExecutorBuilder AddApplication(this IRequestExecutorBuilder builder, Application app)
+        public static IRequestExecutorBuilder AddModule(this IRequestExecutorBuilder builder, IModule module)
         {
-            foreach (Module module in app.Modules)
+            foreach (IComponent component in module.GetAllComponents())
             {
-                foreach (GraphQLComponent component in module.Components.OfType<GraphQLComponent>())
+                if (component is GraphQLComponent gql)
                 {
-                    builder.AddType(component.ImplementationType);
+                    builder.AddType(gql.ImplementationType);
                 }
             }
 

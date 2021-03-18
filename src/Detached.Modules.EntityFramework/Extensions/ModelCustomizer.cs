@@ -6,41 +6,32 @@ namespace Detached.Modules.EntityFramework.DbContextExtension
 {
     public class ModelCustomizer : IModelCustomizer
     {
-        readonly Application _app;
+        readonly IModule _module;
 
-        public ModelCustomizer(Application app)
+        public ModelCustomizer(IModule module)
         {
-            _app = app;
+            _module = module;
         }
 
         public void Customize(ModelBuilder modelBuilder, DbContext context)
         {
-            foreach (IComponent component in _app.Components)
+            foreach (IComponent component in _module.GetAllComponents())
             {
-                ConfigureComponent(modelBuilder, context, component);
-            }
-
-            foreach (Module module in _app.Modules)
-            {
-                foreach (IComponent component in _app.Components)
+                switch (component)
                 {
-                    ConfigureComponent(modelBuilder, context, component);
+                    case RepositoryComponent repo:
+                        if (repo.DbContextType == context.GetType())
+                        {
+                            repo.ConfigureModel(context, modelBuilder);
+                        }
+                        break;
+                    case MappingComponent mapping:
+                        if (mapping.DbContextType == context.GetType())
+                        {
+                            mapping.ConfigureModel(modelBuilder);
+                        }
+                        break;
                 }
-            }
-        }
-
-        void ConfigureComponent(ModelBuilder modelBuilder, DbContext context, IComponent component)
-        {
-            switch (component)
-            {
-                case RepositoryComponent repo:
-                    if (repo.DbContextType == context.GetType())
-                        repo.ConfigureModel(context, modelBuilder);
-                    break;
-                case MappingComponent mapping:
-                    if (mapping.DbContextType == context.GetType())
-                        mapping.ConfigureModel(modelBuilder);
-                    break;
             }
         }
     }

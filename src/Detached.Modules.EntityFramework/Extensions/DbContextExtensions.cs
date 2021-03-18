@@ -8,30 +8,17 @@ namespace Detached.Modules.EntityFramework.Extensions
     {
         public static async Task ApplySeedFilesAsync(this DbContext dbContext)
         {
-            Application app = dbContext.GetService<Application>();
+            IModule module = dbContext.GetService<IModule>();
 
-            foreach (IComponent component in app.Components)
+            foreach (IComponent component in module.GetAllComponents())
             {
-                await ConfigureComponent(dbContext, component);
-            }
-
-            foreach (Module module in app.Modules)
-            {
-                foreach (IComponent component in module.Components)
+                if (component is SeedFileComponent dataFile && dataFile.DbContextType == dbContext.GetType())
                 {
-                    await ConfigureComponent(dbContext, component);
+                    await dataFile.UpdateDataAsync(dbContext);
                 }
             }
 
             await dbContext.SaveChangesAsync();
-        }
-
-        static async Task ConfigureComponent(DbContext dbContext, IComponent component)
-        {
-            if (component is SeedFileComponent dataFile && dataFile.DbContextType == dbContext.GetType())
-            {
-                await dataFile.UpdateDataAsync(dbContext);
-            }
         }
     }
 }

@@ -1,14 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Detached.Modules
 {
     public interface IComponent
     {
-        public IModule Module { get; set; }
-
-        void ConfigureServices(IServiceCollection services)
-        {
-
-        }
+        void ConfigureServices(IModule module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment);
     }
 }

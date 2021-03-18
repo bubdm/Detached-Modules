@@ -1,4 +1,5 @@
 ﻿using Detached.Modules.Components;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -6,6 +7,11 @@ namespace Detached.Modules
 {
     public static class Package
     {
+        public static void AddModule(this IModule module, IModule submodule)
+        {
+            module.Modules.Add(submodule);
+        }
+
         public static void AddService<TService>(this IModule module, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
             module.Components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TService), typeof(TService), serviceLifetime)));
@@ -32,18 +38,18 @@ namespace Detached.Modules
             module.Components.Add(new OptionsComponent<TOptions>());
         }
 
-        public static TOptions GetOptions<TOptions>(this IModule module)
+        public static TOptions GetOptions<TOptions>(this IModule module, IConfiguration configuration)
            where TOptions : class, new()
         {
             foreach (IComponent component in module.Components)
             {
                 if (component is OptionsComponent<TOptions> optionsComponent)
                 {
-                    return optionsComponent.GetValue();
+                    return optionsComponent.Get(module, configuration);
                 }
             }
 
-            throw new InvalidOperationException($"No options was registered for {typeof(TOptions).Name}.");
+            throw new InvalidOperationException($"No options registered for {typeof(TOptions).Name}.");
         }
     }
 }

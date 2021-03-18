@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Detached.Modules.Components
 {
@@ -10,28 +11,26 @@ namespace Detached.Modules.Components
         {
             Name = name ?? typeof(TOptions).Name.Replace("Options", "");
         }
-
-        public IModule Module { get; set; }
-
+ 
         public string Name { get; set; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IModule module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
-            IConfiguration section = GetSection();
+            IConfiguration section = GetSection(module, configuration);
             services.Configure<TOptions>(section);
         }
 
-        public IConfiguration GetSection()
+        public IConfiguration GetSection(IModule module, IConfiguration configuration)
         {
-            string setting = $"{Module.Name}:{Name}";
-            IConfiguration section = Module.Application.Configuration.GetSection(setting);
+            string setting = $"{module.Name}:{Name}";
+            IConfiguration section = configuration.GetSection(setting);
             return section;
         }
 
-        public TOptions GetValue()
+        public TOptions Get(IModule module, IConfiguration configuration)
         {
             TOptions options = new TOptions();
-            GetSection().Bind(options);
+            GetSection(module, configuration).Bind(options);
             return options;
         }
     }

@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
 
 namespace Detached.Modules
 {
@@ -8,8 +12,12 @@ namespace Detached.Modules
 
         Version Version { get; }
 
-        ComponentCollection Components { get; }
+        List<IComponent> Components { get; }
 
-        Application Application { get; }
+        List<IModule> Modules { get; }
+
+        void ConfigureServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment);
+
+        IEnumerable<IComponent> GetAllComponents();
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Detached.Mappers.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
 
@@ -44,7 +46,7 @@ namespace Detached.Modules.EntityFramework.Components
                 ConfigureMappingMethodInfo.Invoke(repoInstance, new[] { mapperOptions });
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IModule module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
             services.Add(new ServiceDescriptor(MapperType, MapperType, ServiceLifetime.Scoped));
         }
