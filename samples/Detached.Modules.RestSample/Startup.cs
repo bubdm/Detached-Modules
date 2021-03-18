@@ -1,4 +1,3 @@
-using Detached.Mappers.EntityFramework;
 using Detached.Modules.EntityFramework;
 using Detached.Modules.EntityFramework.Extensions;
 using Detached.Modules.RestSample.Modules;
@@ -13,26 +12,26 @@ using System.Threading.Tasks;
 
 namespace Detached.Modules.RestSample
 {
-    public class Startup : Application
+    public class Startup
     {
+        Application _app;
+
         public Startup(IConfiguration configuration, IHostEnvironment environment)
-            : base(configuration, environment)
         {
-            Modules.Add(new SecurityModule());
-        }
+            _app = new Application(configuration, environment);
 
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            base.ConfigureServices(services);
-
-            services.AddControllers();
-
-            services.AddDbContext<MainDbContext>(cfg =>
+            _app.AddModule(new SecurityModule());
+            _app.AddDbContext<MainDbContext>(cfg =>
             {
-                cfg.UseDetached();
-                cfg.UseApplication(this);
                 cfg.UseSqlite($"Data Source={Path.GetTempPath()}\\detached.db");
             });
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            _app.ConfigureServices(services);
+
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, MainDbContext dbContext)
@@ -53,7 +52,7 @@ namespace Detached.Modules.RestSample
         {
             await dbContext.Database.EnsureDeletedAsync();
             await dbContext.Database.EnsureCreatedAsync();
-            await dbContext.UpdateDataAsync();
+            await dbContext.ApplySeedFilesAsync();
         }
     }
 }

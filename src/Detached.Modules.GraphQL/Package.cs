@@ -9,14 +9,14 @@ namespace Detached.Modules.GraphQL
 {
     public static class Package
     {
-        public static void AddMutation<TMutation>(this ComponentCollection components)
+        public static void AddMutation<TMutation>(this IModule module)
         {
-            components.Add(new GraphQLComponent { ComponentType = typeof(MutationTypeExtension<TMutation>) });
+            module.Components.Add(new GraphQLComponent { ImplementationType = typeof(MutationTypeExtension<TMutation>) });
         }
 
-        public static void AddQuery<TQuery>(this ComponentCollection components)
+        public static void AddQuery<TQuery>(this IModule module)
         {
-            components.Add(new GraphQLComponent { ComponentType = typeof(QueryTypeExtension<TQuery>) });
+            module.Components.Add(new GraphQLComponent { ImplementationType = typeof(QueryTypeExtension<TQuery>) });
         }
 
         public static IRequestExecutorBuilder AddApplication(this IRequestExecutorBuilder builder, Application app)
@@ -25,13 +25,12 @@ namespace Detached.Modules.GraphQL
             {
                 foreach (GraphQLComponent component in module.Components.OfType<GraphQLComponent>())
                 {
-                    builder.AddType(component.ComponentType);
+                    builder.AddType(component.ImplementationType);
                 }
             }
 
             builder.UseField<InputValidationMiddleware>();
             
-
             return builder;
         }
     }

@@ -7,11 +7,11 @@ using Detached.Mappers;
 
 namespace Detached.Modules.EntityFramework
 {
-    public class EFRepository<TDbContext, TEntity>
+    public class Repository<TDbContext, TEntity>
         where TDbContext : DbContext
         where TEntity : class
     {
-        public EFRepository(TDbContext dbContext)
+        public Repository(TDbContext dbContext)
         {
             DbContext = dbContext;
         }

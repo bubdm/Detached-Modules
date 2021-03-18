@@ -7,9 +7,9 @@ using System.Reflection;
 
 namespace Detached.Modules.EntityFramework
 {
-    public class EFRepositoryComponent : Component
+    public class RepositoryComponent : IComponent
     {
-        public EFRepositoryComponent(Type repositoryType)
+        public RepositoryComponent(Type repositoryType)
         {
             RepositoryType = repositoryType;
 
@@ -22,9 +22,12 @@ namespace Detached.Modules.EntityFramework
             if (ConstructorInfo == null)
                 throw new ArgumentException($"Type {repositoryType} should contain a constructor with a single parmeter of a type derived from DbContext.");
 
+            DbContextType = ConstructorInfo.GetParameters()[0].ParameterType;
             ConfigureModelMehtodInfo = repositoryType.GetMethod("ConfigureModel");
-            ConfigureMappingMethodInfo = repositoryType.GetMethod("ConfigureMapping");
+            ConfigureMappingMethodInfo = repositoryType.GetMethod("ConfigureMapper");
         }
+
+        public IModule Module { get; set; }
 
         public Type DbContextType { get; set; }
 
@@ -52,7 +55,7 @@ namespace Detached.Modules.EntityFramework
                 ConfigureMappingMethodInfo.Invoke(repoInstance, new[] { mapperOptions });
         }
 
-        public override void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.Add(new ServiceDescriptor(RepositoryType, RepositoryType, ServiceLifetime.Scoped));
         }

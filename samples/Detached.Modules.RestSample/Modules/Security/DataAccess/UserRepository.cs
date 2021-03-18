@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Detached.Modules.RestSample.Modules.Security.Repositories
+namespace Detached.Modules.RestSample.Modules.Security.DataAccess
 {
     public class UserRepository
     {

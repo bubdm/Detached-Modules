@@ -3,7 +3,7 @@ using System;
 
 namespace Detached.Modules
 {
-    public class Module
+    public class Module : IModule
     {
         public Module()
         {

@@ -2,7 +2,7 @@
 
 namespace Detached.Modules.Components
 {
-    public class ServiceComponent : Component
+    public class ServiceComponent : IComponent
     {
         readonly ServiceDescriptor _serviceDescriptor;
 
@@ -11,7 +11,9 @@ namespace Detached.Modules.Components
             _serviceDescriptor = serviceDescriptor;
         }
 
-        public override void ConfigureServices(IServiceCollection services)
+        public IModule Module { get; set; }
+
+        public void ConfigureServices(IServiceCollection services)
         {
             services.Add(_serviceDescriptor);
         }

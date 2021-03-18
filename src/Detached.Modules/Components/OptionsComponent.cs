@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Detached.Modules.Components
 {
-    public class OptionsComponent<TOptions> : Component
+    public class OptionsComponent<TOptions> : IComponent
         where TOptions : class, new()
     {
         public OptionsComponent(string name = null)
@@ -11,9 +11,11 @@ namespace Detached.Modules.Components
             Name = name ?? typeof(TOptions).Name.Replace("Options", "");
         }
 
+        public IModule Module { get; set; }
+
         public string Name { get; set; }
 
-        public override void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             IConfiguration section = GetSection();
             services.Configure<TOptions>(section);
