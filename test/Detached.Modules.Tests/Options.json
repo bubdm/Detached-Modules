@@ -1,0 +1,8 @@
+﻿{
+  "Root": {
+    "Test": {
+      "OptionValue1": "this is the value 1",
+      "OptionValue2": "this is the value 2"
+    }
+  }
+}

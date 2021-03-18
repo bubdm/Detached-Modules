@@ -1,32 +1,36 @@
-﻿using HotChocolate;
-using QuickApi.Services;
-using System.Linq;
+﻿using Detached.Modules.GraphQL.TypeExtensions;
+using Detached.Modules.GraphQL.Validation;
+using HotChocolate;
+using HotChocolate.Execution.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Detached.Modules.GraphQL
 {
     public static class Package
     {
-        public static void AddMutation<TMutation>(this DetachedComponentCollection components)
+        public static void AddMutation<TMutation>(this IModule module)
         {
-            components.Add(new GraphQLComponent { ComponentType = typeof(MutationTypeExtension<TMutation>) });
+            module.Components.Add(new GraphQLComponent { ImplementationType = typeof(MutationTypeExtension<TMutation>) });
         }
 
-        public static void AddQuery<TQuery>(this DetachedComponentCollection components)
+        public static void AddQuery<TQuery>(this IModule module)
         {
-            components.Add(new GraphQLComponent { ComponentType = typeof(QueryTypeExtension<TQuery>) });
+            module.Components.Add(new GraphQLComponent { ImplementationType = typeof(QueryTypeExtension<TQuery>) });
         }
 
-        public static ISchemaBuilder UseApplication(this ISchemaBuilder schemaBuilder, DetachedApplication app)
+        public static IRequestExecutorBuilder AddModule(this IRequestExecutorBuilder builder, IModule module)
         {
-            foreach (DetachedModule module in app.Modules)
+            foreach (IComponent component in module.GetAllComponents())
             {
-                foreach (GraphQLComponent component in module.Components.OfType<GraphQLComponent>())
+                if (component is GraphQLComponent gql)
                 {
-                    schemaBuilder.AddType(component.ComponentType);
+                    builder.AddType(gql.ImplementationType);
                 }
             }
 
-            return schemaBuilder;
+            builder.UseField<InputValidationMiddleware>();
+            
+            return builder;
         }
     }
 }

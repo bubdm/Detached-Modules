@@ -1,48 +1,55 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Detached.Modules.Components;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace Detached.Modules
 {
     public static class Package
     {
-        public static void AddService<TService>(this DetachedComponentCollection components, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+        public static void AddModule(this IModule module, IModule submodule)
         {
-            components.Add(new DetachedServiceComponent(new ServiceDescriptor(typeof(TService), typeof(TService), serviceLifetime)));
+            module.Modules.Add(submodule);
         }
 
-        public static void AddService<TContract, TService>(this DetachedComponentCollection components, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+        public static void AddService<TService>(this IModule module, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
-            components.Add(new DetachedServiceComponent(new ServiceDescriptor(typeof(TContract), typeof(TService), serviceLifetime)));
+            module.Components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TService), typeof(TService), serviceLifetime)));
         }
 
-        public static void AddService<TContract, TService>(this DetachedComponentCollection components, TService instance)
+        public static void AddService<TContract, TService>(this IModule module, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
-            components.Add(new DetachedServiceComponent(new ServiceDescriptor(typeof(TContract), instance)));
+            module.Components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TContract), typeof(TService), serviceLifetime)));
         }
 
-        public static void AddService<TService>(this DetachedComponentCollection components, TService instance)
+        public static void AddService<TContract, TService>(this IModule module, TService instance)
         {
-            components.Add(new DetachedServiceComponent(new ServiceDescriptor(typeof(TService), instance)));
+            module.Components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TContract), instance)));
         }
 
-        public static void AddOptions<TOptions>(this DetachedComponentCollection components)
+        public static void AddService<TService>(this IModule module, TService instance)
+        {
+            module.Components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TService), instance)));
+        }
+
+        public static void AddOptions<TOptions>(this IModule module)
             where TOptions : class, new()
         {
-            components.Add(new DetachedOptionsComponent<TOptions>());
+            module.Components.Add(new OptionsComponent<TOptions>());
         }
 
-        public static TOptions GetOptions<TOptions>(this DetachedComponentCollection components)
+        public static TOptions GetOptions<TOptions>(this IModule module, IConfiguration configuration)
            where TOptions : class, new()
         {
-            foreach (DetachedComponent component in components)
+            foreach (IComponent component in module.Components)
             {
-                if (component is DetachedOptionsComponent<TOptions> optionsComponent)
+                if (component is OptionsComponent<TOptions> optionsComponent)
                 {
-                    return optionsComponent.GetValue();
+                    return optionsComponent.Get(module, configuration);
                 }
             }
 
-            throw new InvalidOperationException($"No options was registered for {typeof(TOptions).Name}.");
+            throw new InvalidOperationException($"No options registered for {typeof(TOptions).Name}.");
         }
     }
 }

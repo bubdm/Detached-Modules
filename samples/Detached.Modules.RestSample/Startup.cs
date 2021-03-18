@@ -1,4 +1,3 @@
-using Detached.Mappers.EntityFramework;
 using Detached.Modules.EntityFramework;
 using Detached.Modules.EntityFramework.Extensions;
 using Detached.Modules.RestSample.Modules;
@@ -13,26 +12,29 @@ using System.Threading.Tasks;
 
 namespace Detached.Modules.RestSample
 {
-    public class Startup : DetachedApplication
+    public class Startup
     {
         public Startup(IConfiguration configuration, IHostEnvironment environment)
-            : base(configuration, environment)
         {
-            Modules.Add(new SecurityModule());
+            Configuration = configuration;
+            HostEnviornment = environment;
         }
 
-        public override void ConfigureServices(IServiceCollection services)
+        public IConfiguration Configuration { get; }
+
+        public IHostEnvironment HostEnviornment { get; }
+
+        public void ConfigureServices(IServiceCollection services)
         {
-            base.ConfigureServices(services);
-
-            services.AddControllers();
-
-            services.AddDbContext<MainDbContext>(cfg =>
+            IModule app = new Module { Name = "Application" };
+            app.AddModule(new SecurityModule());
+            app.AddDbContext<MainDbContext>(cfg =>
             {
-                cfg.UseDetached();
-                cfg.UseApplication(this);
                 cfg.UseSqlite($"Data Source={Path.GetTempPath()}\\detached.db");
             });
+            app.ConfigureServices(services, Configuration, HostEnviornment);
+
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, MainDbContext dbContext)
@@ -46,6 +48,7 @@ namespace Detached.Modules.RestSample
                 endpoints.MapControllers();
             });
 
+            // don't do this in production code!
             InitializeDbAsync(dbContext).GetAwaiter().GetResult();
         }
 
@@ -53,7 +56,7 @@ namespace Detached.Modules.RestSample
         {
             await dbContext.Database.EnsureDeletedAsync();
             await dbContext.Database.EnsureCreatedAsync();
-            await dbContext.UpdateDataAsync();
+            await dbContext.ApplySeedFilesAsync();
         }
     }
 }

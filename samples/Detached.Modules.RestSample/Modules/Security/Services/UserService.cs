@@ -1,5 +1,5 @@
-﻿using Detached.Modules.RestSample.Modules.Security.Models;
-using Detached.Modules.RestSample.Modules.Security.Repositories;
+﻿using Detached.Modules.RestSample.Modules.Security.DataAccess;
+using Detached.Modules.RestSample.Modules.Security.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
