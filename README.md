@@ -19,6 +19,8 @@ the initialization.
 Modules are parts of the application focused in high-level functionality, for example a "User Manager" or a "Security" module. 
 A Module may contain Components and/or other Modules, a name and a version number.
 
+The goal of this library is mainly to prototype and implement small and medium applications faster.
+
 #### How it works
 
 An application starts with a root Module, then more Modules are added. Once the configuration is ready, ConfigureServices is 
@@ -210,7 +212,59 @@ public class MyRepository : Repository<MyDbContext, MyEntity>
 ```
 
 ###### Seed File Component
+This component uses [Detached.Mappers](https://github.com/leonardoporro/Detached-Mapper) library to import a json file.
 
+To use it, add the component specifying the path to the json file and the DbContext and Entity type.
 
+```csharp
+this.AddSeedFile<MyDbContext, MyEntity>("Modules/MyModule/DataAccess/MyEntitySeed.json");
+```
+(Json file must contain an array of MyEntity documents).
 
-## GraphQL Components
+To import all the seeds files in the module and its descendant, call DbContext.ApplySeedFilesAsync() extension method.
+Important: DbContext must be added inside the same module or a parent module of the seed files to apply.
+
+## GraphQL Components (HotChocolate)
+Components for the awesome [HotChocolate] (https://github.com/ChilliCream/hotchocolate) library includes Mutation, Query and a general configuration 
+component called just GraphQL.
+
+###### GraphQL Component
+Configuring any aspect of HotChocolate using GraphQL component:
+```csharp 
+ module.AddGraphQL(cfg =>
+{
+    cfg.AddType(...); // access to IRequestExecutorBuilder object.
+    cfg.UseField(...)
+});
+```
+
+###### Mutation
+Extend the Mutation object using the given type with zero configuration:
+
+```csharp
+module.AddMutation<MyEntityMutations>();
+```
+
+###### Query
+Extend the Query object using the given type with zero configuration:
+
+```csharp
+module.AddQuery<MyEntityQueries>();
+```
+
+###### Configuring HotChocolate
+Once all components are defined, AddModule should be called on GraphQL initialization. This is usually done in Startup.cs/ConfigureServices.
+
+```csharp
+services.AddGraphQLServer()
+        .AddMutationType(t => t.Name("Mutation"))
+        .AddQueryType(t => t.Name("Query"))
+        .AddModule(myRootModule) // adding the module will apply all its configurations and children configurations to HotChocolate.
+        .AddFiltering()
+        .AddSorting()
+        .AddProjections()
+        .AddAuthorization();
+```
+
+## Notes
+Any feedback or help would be very welcome!
