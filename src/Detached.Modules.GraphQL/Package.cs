@@ -1,4 +1,5 @@
 ﻿using Detached.Modules.GraphQL.Components;
+using Detached.Modules.GraphQL.Filters;
 using Detached.Modules.GraphQL.TypeExtensions;
 using Detached.Modules.GraphQL.Validation;
 using HotChocolate;
@@ -44,6 +45,7 @@ namespace Detached.Modules.GraphQL
             }
 
             builder.UseField<InputValidationMiddleware>();
+            builder.Services.AddErrorFilter<GraphQLErrorFilter>();
 
             return builder;
         }

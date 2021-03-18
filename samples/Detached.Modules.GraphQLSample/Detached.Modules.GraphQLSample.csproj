@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Detached.Modules.EntityFramework\Detached.Modules.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\Detached.Modules.GraphQL\Detached.Modules.GraphQL.csproj" />
     <ProjectReference Include="..\..\src\Detached.Modules\Detached.Modules.csproj" />

@@ -1,4 +1,5 @@
 ﻿using Detached.Modules.EntityFramework;
+using Detached.Modules.GraphQL;
 using Detached.Modules.GraphQLSample.Modules.Security.DataAccess;
 using Detached.Modules.GraphQLSample.Modules.Security.Models;
 using Detached.Modules.GraphQLSample.Modules.Security.Services;
@@ -11,7 +12,8 @@ namespace Detached.Modules.GraphQLSample.Modules.Security
         {
             this.AddSeedFile<MainDbContext, User>("Modules/Security/DataAccess/UserData.json");
             this.AddRepository<UserRepository>();
-            this.AddService<UserService>();
+            this.AddQuery<UserQuery>();
+            this.AddMutation<UserMutation>();
         }
     }
 }

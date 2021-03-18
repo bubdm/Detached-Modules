@@ -14,14 +14,22 @@ namespace Detached.Modules.GraphQLSample.Modules.Security.DataAccess
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync()
+        public async Task<IEnumerable<User>> GetAsync()
         {
             return await _dbContext.Set<User>().ToListAsync();
+        }
+
+        public async Task<User> CreateAsync(User user)
+        {
+            _dbContext.Set<User>().Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            return user;
         }
 
         public void ConfigureModel(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>();
-        }
+        }   
     }
 }
