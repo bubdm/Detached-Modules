@@ -2,9 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>5.0.0</Version>
+    <Version>5.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/leonardoporro/Detached-Modules</PackageProjectUrl>
+    <Authors>Leonardo Porro</Authors>
+    <Company>Leonardo Porro</Company>
+    <Product>Modules base library</Product>
+    <Description>Modules are a very opinionated way to better organize small or medium aspnet or similar applications.
+It also allows to split configurations that are otherwise centralized, for example, Entity Framework mappings.
+Custom Components may also provide extra functionality.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/leonardoporro/Detached-Modules</RepositoryUrl>
+    <RepositoryType></RepositoryType>
+    <PackageTags>module, ef, graphql, organization, scaffolding, components, descentralized</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +25,17 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="5.0.0" />
     <PackageReference Include="Detached.Mappers.EntityFramework" Version="5.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
