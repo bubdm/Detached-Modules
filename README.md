@@ -30,7 +30,7 @@ This is usually added in Startup.cs/ConfigureServices.
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-    IModule app = new Module { Name = "Application" };
+    Module app = new Module { Name = "Application" };
     app.AddModule(new SecurityModule());
     app.AddModule(new AccountingModule());
     app.AddModule(new CustomerModule());
@@ -47,7 +47,7 @@ public void ConfigureServices(IServiceCollection services)
 ```
 ###### Modules
 
-Modules are classes that inherit from Module and define Components and/or other Modules. One feature per Module or a Module containing
+Modules can be organized as classes that inherit from Module and define Components and/or other Modules. One feature per Module or a Module containing
 many features may be implemented. It is up to the developers.
 
 ```csharp
@@ -86,9 +86,9 @@ public class ServiceComponent : IComponent
         _serviceDescriptor = serviceDescriptor;
     }
 
-    public IModule Module { get; set; }
+    public Module Module { get; set; }
 
-    public void ConfigureServices(IModule module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+    public void ConfigureServices(Module module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
     {
         services.Add(_serviceDescriptor);
     }
@@ -117,6 +117,27 @@ public class SeedFileComponent<TDbContext, TEntity> : SeedFileComponent
             // this uses Detached.Mapper library! check it out.
             await dbContext.ImportJsonAsync<TEntity>(fileStream);
         }
+    }
+}
+```
+###### Annotations
+Components can be automatically added using Annotations. Annotations are Attributes that inherit IComponentType.
+
+```csharp
+[ServiceComponent]
+public class MyService
+{
+
+}
+```
+Use AddComponents to scan an assembly and add all components. Optionally, components can be filtered using a lambda predicate.
+
+```csharp
+public class MyModule()
+{
+    public MyModule()
+    {
+        AddComponents();
     }
 }
 ```

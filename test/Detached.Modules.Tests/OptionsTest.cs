@@ -13,7 +13,7 @@ namespace Detached.Modules.Tests
         {
             IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("Options.json").Build();
 
-            IModule root = new Module() { Name = "Root" };
+            Module root = new Module() { Name = "Root" };
             root.AddOptions<TestOptions>();
 
             IServiceCollection services = new ServiceCollection();
@@ -32,7 +32,7 @@ namespace Detached.Modules.Tests
         {
             IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("Options.json").Build();
 
-            IModule root = new Module() { Name = "Root" };
+            Module root = new Module() { Name = "Root" };
             root.AddOptions<TestOptions>();
 
             IServiceCollection services = new ServiceCollection();

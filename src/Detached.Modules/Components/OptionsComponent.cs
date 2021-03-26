@@ -14,24 +14,33 @@ namespace Detached.Modules.Components
  
         public string Name { get; set; }
 
-        public void ConfigureServices(IModule module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+        public void ConfigureServices(Module module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
             IConfiguration section = GetSection(module, configuration);
             services.Configure<TOptions>(section);
         }
 
-        public IConfiguration GetSection(IModule module, IConfiguration configuration)
+        public IConfiguration GetSection(Module module, IConfiguration configuration)
         {
             string setting = $"{module.Name}:{Name}";
             IConfiguration section = configuration.GetSection(setting);
             return section;
         }
 
-        public TOptions Get(IModule module, IConfiguration configuration)
+        public TOptions Get(Module module, IConfiguration configuration)
         {
             TOptions options = new TOptions();
             GetSection(module, configuration).Bind(options);
             return options;
+        }
+
+        public ComponentInfo GetInfo()
+        {
+            return new ComponentInfo(
+                Name,
+                "Options",
+                null
+            );
         }
     }
 }

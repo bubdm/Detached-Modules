@@ -13,8 +13,18 @@ namespace Detached.Modules.GraphQL.Components
             Build = build;
         }
 
-        public void ConfigureServices(IModule module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+        public void ConfigureServices(Module module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
+        }
+
+        public ComponentInfo GetInfo()
+        {
+            return new ComponentInfo
+            (
+                "Inline Configuration",
+                "Configuration (GraphQL)",
+                null
+            );
         }
 
         public Action<IRequestExecutorBuilder> Build { get; }

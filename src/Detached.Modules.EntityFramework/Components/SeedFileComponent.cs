@@ -4,26 +4,34 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Detached.Modules.EntityFramework
 {
     public abstract class SeedFileComponent : IComponent
     {
-        public static string DefaultFilePath = "Modules/{ModuleName}/DataAccess/InitialData/{EntityName}Data.json";
-
-        public IModule Module { get; set; }
-
         public string Path { get; set; }
 
         public abstract Type DbContextType { get; }
 
         public abstract Type EntityType { get; }
 
-        public void ConfigureServices(IModule module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+        public void ConfigureServices(Module module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
+        }
+
+        public ComponentInfo GetInfo()
+        {
+            return new ComponentInfo(
+                Path,
+                "SeedFile (EF)",
+                new Dictionary<string, object>
+                {
+                    { nameof(DbContextType), DbContextType.FullName },
+                    { nameof(EntityType), EntityType.FullName }
+                });
         }
 
         public abstract Task UpdateDataAsync(DbContext dbContext);
@@ -39,17 +47,7 @@ namespace Detached.Modules.EntityFramework
 
         public override async Task UpdateDataAsync(DbContext dbContext)
         {
-            string path = Path;
-
-            if (string.IsNullOrEmpty(path))
-            {
-                StringBuilder pathBuilder = new StringBuilder(DefaultFilePath);
-                pathBuilder.Replace("{ModuleName}", Module.Name);
-                pathBuilder.Replace("{EntityName}", typeof(TEntity).Name);
-                path = pathBuilder.ToString();
-            }
-
-            using (Stream fileStream = File.OpenRead(path)) 
+            using (Stream fileStream = File.OpenRead(Path))
             {
                 await dbContext.ImportJsonAsync<TEntity>(fileStream);
             }

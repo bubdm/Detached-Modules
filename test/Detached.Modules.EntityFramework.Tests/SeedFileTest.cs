@@ -15,7 +15,7 @@ namespace Detached.Modules.EntityFramework.Tests
         public async Task TestSeedFiles()
         {
             // GIVEN a configured application
-            IModule module = new Module();
+            Module module = new Module();
 
             // GIVEN a db context
             module.AddDbContext<TestSeedFileDbContext>(cfg =>

@@ -8,9 +8,9 @@ namespace Detached.Modules.EntityFramework.Extensions
     {
         public static async Task ApplySeedFilesAsync(this DbContext dbContext)
         {
-            IModule module = dbContext.GetService<IModule>();
+            Module module = dbContext.GetService<Module>();
 
-            foreach (IComponent component in module.GetAllComponents())
+            foreach (IComponent component in module.GetComponents())
             {
                 if (component is SeedFileComponent dataFile && dataFile.DbContextType == dbContext.GetType())
                 {

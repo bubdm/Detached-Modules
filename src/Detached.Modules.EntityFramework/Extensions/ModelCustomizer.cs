@@ -6,16 +6,16 @@ namespace Detached.Modules.EntityFramework.DbContextExtension
 {
     public class ModelCustomizer : IModelCustomizer
     {
-        readonly IModule _module;
+        readonly Module _module;
 
-        public ModelCustomizer(IModule module)
+        public ModelCustomizer(Module module)
         {
             _module = module;
         }
 
         public void Customize(ModelBuilder modelBuilder, DbContext context)
         {
-            foreach (IComponent component in _module.GetAllComponents())
+            foreach (IComponent component in _module.GetComponents())
             {
                 switch (component)
                 {

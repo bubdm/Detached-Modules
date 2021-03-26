@@ -8,9 +8,9 @@ namespace Detached.Modules.EntityFramework.Extensions
 {
     public class DbContextOptionsExtension : IDbContextOptionsExtension
     {
-        readonly IModule _module;
+        readonly Module _module;
 
-        public DbContextOptionsExtension(IModule module)
+        public DbContextOptionsExtension(Module module)
         {
             Info = new DbContextOptionsExtensionInfo(this, module);
             _module = module;

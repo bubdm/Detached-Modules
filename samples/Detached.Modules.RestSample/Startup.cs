@@ -26,7 +26,7 @@ namespace Detached.Modules.RestSample
 
         public void ConfigureServices(IServiceCollection services)
         {
-            IModule app = new Module { Name = "Application" };
+            Module app = new Module { Name = "Application" };
             app.AddModule(new SecurityModule());
             app.AddDbContext<MainDbContext>(cfg =>
             {

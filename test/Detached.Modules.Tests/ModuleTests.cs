@@ -9,7 +9,7 @@ namespace Detached.Modules.Tests
         [Fact]
         public void TestSimpleModule()
         {
-            IModule module = new Module();
+            Module module = new Module();
             module.AddService<TestService>();
 
             IServiceCollection services = new ServiceCollection();
@@ -24,9 +24,9 @@ namespace Detached.Modules.Tests
         [Fact]
         public void TestNestedModule()
         {
-            IModule root = new Module();
-            IModule level1 = new Module();
-            IModule level2 = new Module();
+            Module root = new Module();
+            Module level1 = new Module();
+            Module level2 = new Module();
 
             root.Modules.Add(level1);
             level1.Modules.Add(level2);

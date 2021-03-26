@@ -7,16 +7,16 @@ namespace Detached.Modules.EntityFramework.DbContextExtension
 {
     public class MapperCustomizer : IMapperCustomizer
     {
-        readonly IModule _module;
+        readonly Module _module;
 
-        public MapperCustomizer(IModule module)
+        public MapperCustomizer(Module module)
         {
             _module = module;
         }
 
         public void Customize(DbContext dbContext, MapperOptions mapperOptions)
         {
-            foreach (IComponent component in _module.GetAllComponents())
+            foreach (IComponent component in _module.GetComponents())
             {
                 switch (component)
                 {

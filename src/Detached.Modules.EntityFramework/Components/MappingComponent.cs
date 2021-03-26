@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Detached.Modules.EntityFramework.Components
@@ -18,7 +19,7 @@ namespace Detached.Modules.EntityFramework.Components
             ConfigureMappingMethodInfo = mappingType.GetMethod("ConfigureMapper");
         }
 
-        public IModule Module { get; set; }
+        public Module Module { get; set; }
 
         public Type DbContextType { get; set; }
 
@@ -46,9 +47,22 @@ namespace Detached.Modules.EntityFramework.Components
                 ConfigureMappingMethodInfo.Invoke(repoInstance, new[] { mapperOptions });
         }
 
-        public void ConfigureServices(IModule module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+        public void ConfigureServices(Module module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
             services.Add(new ServiceDescriptor(MapperType, MapperType, ServiceLifetime.Scoped));
+        }
+
+        public ComponentInfo GetInfo()
+        {
+            return new ComponentInfo(
+                MapperType.Name,
+                "Mapping (EF)",
+                new Dictionary<string, object>
+                {
+                    { nameof(MapperType), MapperType.FullName },
+                    { nameof(DbContextType), DbContextType.FullName }
+                }
+            );
         }
     }
 }

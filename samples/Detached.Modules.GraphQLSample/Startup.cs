@@ -3,6 +3,7 @@ using Detached.Modules.EntityFramework.Extensions;
 using Detached.Modules.GraphQL;
 using Detached.Modules.GraphQLSample.Modules;
 using Detached.Modules.GraphQLSample.Modules.Security;
+using Detached.Modules.GraphQLSample.Modules.System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,14 +29,16 @@ namespace Detached.Modules.GraphQLSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            IModule app = new Module { Name = "Application" };
+            Module app = new Module { Name = "Application" };
             app.AddModule(new SecurityModule());
+            app.AddModule(new SystemModule());
             app.AddDbContext<MainDbContext>(cfg =>
             {
                 cfg.UseSqlite($"Data Source={Path.GetTempPath()}\\detached.db");
             });
             app.ConfigureServices(services, Configuration, HostEnvironment);
 
+            services.AddSingleton(app);
             services.AddGraphQLServer()
                     .AddMutationType(t => t.Name("Mutation"))
                     .AddQueryType(t => t.Name("Query"))

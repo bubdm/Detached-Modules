@@ -7,38 +7,38 @@ namespace Detached.Modules
 {
     public static class Package
     {
-        public static void AddModule(this IModule module, IModule submodule)
+        public static void AddModule(this Module module, Module submodule)
         {
             module.Modules.Add(submodule);
         }
 
-        public static void AddService<TService>(this IModule module, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+        public static void AddService<TService>(this Module module, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
             module.Components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TService), typeof(TService), serviceLifetime)));
         }
 
-        public static void AddService<TContract, TService>(this IModule module, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+        public static void AddService<TContract, TService>(this Module module, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
             module.Components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TContract), typeof(TService), serviceLifetime)));
         }
 
-        public static void AddService<TContract, TService>(this IModule module, TService instance)
+        public static void AddService<TContract, TService>(this Module module, TService instance)
         {
             module.Components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TContract), instance)));
         }
 
-        public static void AddService<TService>(this IModule module, TService instance)
+        public static void AddService<TService>(this Module module, TService instance)
         {
             module.Components.Add(new ServiceComponent(new ServiceDescriptor(typeof(TService), instance)));
         }
 
-        public static void AddOptions<TOptions>(this IModule module)
+        public static void AddOptions<TOptions>(this Module module)
             where TOptions : class, new()
         {
             module.Components.Add(new OptionsComponent<TOptions>());
         }
 
-        public static TOptions GetOptions<TOptions>(this IModule module, IConfiguration configuration)
+        public static TOptions GetOptions<TOptions>(this Module module, IConfiguration configuration)
            where TOptions : class, new()
         {
             foreach (IComponent component in module.Components)

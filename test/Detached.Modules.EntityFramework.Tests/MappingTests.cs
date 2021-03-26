@@ -16,7 +16,7 @@ namespace Detached.Modules.EntityFramework.Tests
         public void TestMappingComponent()
         {
             // GIVEN a configured application
-            IModule module = new Module();
+            Module module = new Module();
 
             // GIVEN a db context
             module.AddDbContext<TestMappingDbContext>(cfg =>
