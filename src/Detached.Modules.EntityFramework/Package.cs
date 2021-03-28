@@ -27,18 +27,10 @@ namespace Detached.Modules.EntityFramework
             module.Components.Add(new RepositoryComponent(typeof(TRepository), dbContetType, contractType, lifetime));
         }
 
-        public static void AddSeedFile<TDbContext, TEntity>(this Module module, string filePath)
-            where TDbContext : DbContext
-            where TEntity : class
+        public static void AddSeed<TSeed>(this Module module)
+            where TSeed : class
         {
-            module.Components.Add(new SeedFileComponent<TDbContext, TEntity> { Path = filePath });
-        }
-
-        public static void AddSeedFile<TDbContext, TEntity>(this Module module)
-           where TDbContext : DbContext
-           where TEntity : class
-        {
-            module.Components.Add(new SeedFileComponent<TDbContext, TEntity> { });
+            module.Components.Add(new SeedComponent(typeof(TSeed)));
         }
 
         public static void AddMapping<TDbContext, TMapping>(this Module module)

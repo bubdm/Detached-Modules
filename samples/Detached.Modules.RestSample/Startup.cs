@@ -56,7 +56,7 @@ namespace Detached.Modules.RestSample
         {
             await dbContext.Database.EnsureDeletedAsync();
             await dbContext.Database.EnsureCreatedAsync();
-            await dbContext.ApplySeedFilesAsync();
+            await dbContext.SeedAsync();
         }
     }
 }

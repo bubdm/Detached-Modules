@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Detached.Modules.EntityFramework.Components;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Threading.Tasks;
 
@@ -6,15 +7,20 @@ namespace Detached.Modules.EntityFramework.Extensions
 {
     public static class DbContextExtensions
     {
-        public static async Task ApplySeedFilesAsync(this DbContext dbContext)
+        public static async Task SeedAsync(this DbContext dbContext)
         {
             Module module = dbContext.GetService<Module>();
 
             foreach (IComponent component in module.GetComponents())
             {
-                if (component is SeedFileComponent dataFile && dataFile.DbContextType == dbContext.GetType())
+                switch(component)
                 {
-                    await dataFile.UpdateDataAsync(dbContext);
+                    case SeedComponent seed:
+                        await seed.SeedAsync(dbContext);
+                        break;
+                    case RepositoryComponent repo:
+                        await repo.SeedAsync(dbContext);
+                        break;
                 }
             }
 

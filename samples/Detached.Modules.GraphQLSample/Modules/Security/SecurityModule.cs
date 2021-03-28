@@ -1,7 +1,6 @@
 ﻿using Detached.Modules.EntityFramework;
 using Detached.Modules.GraphQL;
 using Detached.Modules.GraphQLSample.Modules.Security.DataAccess;
-using Detached.Modules.GraphQLSample.Modules.Security.Models;
 using Detached.Modules.GraphQLSample.Modules.Security.Services;
 
 namespace Detached.Modules.GraphQLSample.Modules.Security
@@ -10,7 +9,7 @@ namespace Detached.Modules.GraphQLSample.Modules.Security
     {
         public SecurityModule()
         {
-            this.AddSeedFile<MainDbContext, User>("Modules/Security/DataAccess/UserData.json");
+            AddComponents();
             this.AddRepository<UserRepository>();
             this.AddQuery<UserQuery>();
             this.AddMutation<UserMutation>();

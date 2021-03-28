@@ -9,7 +9,7 @@ namespace Detached.Modules.RestSample.Modules.Security
     {
         public SecurityModule()
         {
-            this.AddSeedFile<MainDbContext, User>("Modules/Security/DataAccess/UserData.json");
+            //this.AddSeedFile<MainDbContext, User>("Modules/Security/DataAccess/UserData.json");
             this.AddRepository<UserRepository>();
             this.AddService<UserService>();
         }

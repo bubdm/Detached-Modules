@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Detached.Modules.EntityFramework.DbContextExtension
 {
-    public class MapperCustomizer : IMapperCustomizer
+    public class MappingCustomizer : IMapperCustomizer
     {
         readonly Module _module;
 
-        public MapperCustomizer(Module module)
+        public MappingCustomizer(Module module)
         {
             _module = module;
         }

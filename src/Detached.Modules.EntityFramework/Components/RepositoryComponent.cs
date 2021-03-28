@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Detached.Modules.EntityFramework
 {
@@ -34,8 +35,9 @@ namespace Detached.Modules.EntityFramework
             if (DbContextType == null)
                 DbContextType = ConstructorInfo.GetParameters()[0].ParameterType;
 
-            ConfigureModelMehtodInfo = repositoryType.GetMethod("ConfigureModel");
-            ConfigureMappingMethodInfo = repositoryType.GetMethod("ConfigureMapper");
+            ConfigureModelMehtodInfo = repositoryType.GetMethod("ConfigureModel", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            ConfigureMappingMethodInfo = repositoryType.GetMethod("ConfigureMapper", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            SeedAsyncMethodInfo = repositoryType.GetMethod("SeedAsync", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         }
 
         public Module Module { get; set; }
@@ -54,20 +56,33 @@ namespace Detached.Modules.EntityFramework
 
         public MethodInfo ConfigureMappingMethodInfo { get; set; }
 
+        public MethodInfo SeedAsyncMethodInfo { get; set; }
+
         public void ConfigureModel(DbContext dbContext, ModelBuilder modelBuilder)
         {
-            object repoInstance = ConstructorInfo.Invoke(new[] { dbContext });
-
-            if (ConfigureModelMehtodInfo != null)
+            if (ConstructorInfo != null && ConfigureModelMehtodInfo != null)
+            {
+                object repoInstance = ConstructorInfo.Invoke(new[] { dbContext });
                 ConfigureModelMehtodInfo.Invoke(repoInstance, new[] { modelBuilder });
+            }
         }
 
         public void ConfigureMapper(DbContext dbContext, MapperOptions mapperOptions)
         {
-            object repoInstance = ConstructorInfo.Invoke(new[] { dbContext });
-
-            if (ConfigureMappingMethodInfo != null)
+            if (ConstructorInfo != null && ConfigureMappingMethodInfo != null)
+            {
+                object repoInstance = ConstructorInfo.Invoke(new[] { dbContext });
                 ConfigureMappingMethodInfo.Invoke(repoInstance, new[] { mapperOptions });
+            }
+        }
+
+        public async Task SeedAsync(DbContext dbContext)
+        {
+            if (ConstructorInfo != null && SeedAsyncMethodInfo != null)
+            {
+                object repoInstance = ConstructorInfo.Invoke(new[] { dbContext });
+                await (Task)SeedAsyncMethodInfo.Invoke(repoInstance, null);
+            }
         }
 
         public void ConfigureServices(Module module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)

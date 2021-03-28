@@ -24,7 +24,7 @@ namespace Detached.Modules
 
         public List<Module> Modules { get; } = new List<Module>();
 
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+        public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
             foreach (IComponent component in Components)
             {
@@ -37,7 +37,7 @@ namespace Detached.Modules
             }
         }
 
-        public IEnumerable<IComponent> GetComponents()
+        public virtual IEnumerable<IComponent> GetComponents()
         {
             foreach (IComponent component in Components)
             {
@@ -56,12 +56,12 @@ namespace Detached.Modules
         /// <summary>
         /// Adds all components in the current namespace and descendant namespaces.
         /// </summary>
-        public void AddComponents()
+        public virtual void AddComponents()
         {
             AddComponents(t => t.Namespace.StartsWith(GetType().Namespace), GetType().Assembly);
         }
 
-        public void AddComponents(Func<Type, bool> filter = null, Assembly assembly = null)
+        public virtual void AddComponents(Func<Type, bool> filter = null, Assembly assembly = null)
         {
             if (assembly == null)
                 assembly = GetType().Assembly;
@@ -79,7 +79,7 @@ namespace Detached.Modules
             }
         }
 
-        public void AddComponent(Type type)
+        public virtual void AddComponent(Type type)
         {
             IComponentType annotation = GetComponentType(type);
             if (annotation == null)
@@ -88,17 +88,17 @@ namespace Detached.Modules
             annotation.AddToModule(type, this);
         }
 
-        public void AddModule(Module module)
+        public virtual void AddModule(Module module)
         {
             Modules.Add(module);
         }
 
-        public IComponentType GetComponentType(Type type)
+        public virtual IComponentType GetComponentType(Type type)
         {
             return type.GetCustomAttributes().OfType<IComponentType>().FirstOrDefault();
         }
 
-        public ModuleInfo GetInfo()
+        public virtual ModuleInfo GetInfo()
         {
             ModuleInfo[] submodules = new ModuleInfo[Modules.Count];
             for (int i = 0; i < submodules.Length; i++)

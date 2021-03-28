@@ -2,9 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Suites\Seeding\FileDocumentSeed.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Suites\Seeding\ResourceDocumentSeed.cs" />
+    <EmbeddedResource Include="Suites\Seeding\ResourceDocumentSeed.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.4" />
@@ -27,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SeedFile.json">
+    <None Update="Suites\Repository\Fixture\RepositoryDocument.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

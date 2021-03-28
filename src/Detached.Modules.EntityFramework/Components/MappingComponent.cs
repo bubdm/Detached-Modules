@@ -15,11 +15,9 @@ namespace Detached.Modules.EntityFramework.Components
         {
             MapperType = mappingType;
             DbContextType = dbContextType;
-            ConfigureModelMehtodInfo = mappingType.GetMethod("ConfigureModel");
-            ConfigureMappingMethodInfo = mappingType.GetMethod("ConfigureMapper");
+            ConfigureModelMehtodInfo = mappingType.GetMethod("ConfigureModel", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            ConfigureMappingMethodInfo = mappingType.GetMethod("ConfigureMapper", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         }
-
-        public Module Module { get; set; }
 
         public Type DbContextType { get; set; }
 
@@ -49,7 +47,6 @@ namespace Detached.Modules.EntityFramework.Components
 
         public void ConfigureServices(Module module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
-            services.Add(new ServiceDescriptor(MapperType, MapperType, ServiceLifetime.Scoped));
         }
 
         public ComponentInfo GetInfo()

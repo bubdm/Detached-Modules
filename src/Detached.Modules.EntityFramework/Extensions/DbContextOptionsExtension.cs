@@ -22,7 +22,7 @@ namespace Detached.Modules.EntityFramework.Extensions
         {
             services.AddSingleton(_module);
             services.AddScoped<IModelCustomizer>(sp => new ModelCustomizer(_module));
-            services.AddScoped<IMapperCustomizer>(sp => new MapperCustomizer(_module));
+            services.AddScoped<IMapperCustomizer>(sp => new MappingCustomizer(_module));
         }
 
         public void Validate(IDbContextOptions options)
