@@ -2,7 +2,7 @@
 using Detached.Modules.EntityFramework.Tests.Suites.Repository.Fixture;
 using Microsoft.EntityFrameworkCore;
 
-namespace Detached.Modules.EntityFramework.Tests
+namespace Detached.Modules.EntityFramework.Tests.Suites.Repository.Fixture
 {
     public partial class PlainRepository
     {

@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Suites\Repository\Fixture\RepositoryDocument.json">
+    <None Update="Suites\Repository\Fixture\RepositoryDocumentSeed.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

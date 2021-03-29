@@ -2,6 +2,7 @@
 using Detached.Mappers.EntityFramework;
 using Detached.Mappers.Model;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,9 +11,8 @@ using System.Threading.Tasks;
 
 namespace Detached.Modules.EntityFramework
 {
-    public class Repository<TDbContext, TEntity>
+    public abstract class Repository<TDbContext>
         where TDbContext : DbContext
-        where TEntity : class
     {
         public Repository(TDbContext dbContext)
         {
@@ -20,6 +20,31 @@ namespace Detached.Modules.EntityFramework
         }
 
         protected virtual TDbContext DbContext { get; }
+
+        public virtual void ConfigureModel(ModelBuilder modelBuilder)
+        {
+
+        }
+
+        public virtual void ConfigureMapper(MapperOptions mapperOptions)
+        {
+
+        }
+
+        public virtual Task SeedAsync()
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    public abstract class Repository<TDbContext, TEntity> : Repository<TDbContext>
+        where TDbContext : DbContext
+        where TEntity : class
+    {
+        public Repository(TDbContext dbContext)
+            : base(dbContext)
+        {
+        }
 
         public IQueryable<TEntity> CreateQuery()
             => DbContext.Set<TEntity>().AsNoTracking();
@@ -42,19 +67,21 @@ namespace Detached.Modules.EntityFramework
             await DbContext.SaveChangesAsync();
         }
 
-        public virtual void ConfigureModel(ModelBuilder modelBuilder)
+        public override async Task SeedAsync()
         {
+            string filePath = GetDefaultImportFilePath();
 
-        }
-
-        public virtual void ConfigureMapper(MapperOptions mapperOptions)
-        {
-
-        }
-
-        public virtual Task SeedAsync()
-        {
-            return Task.CompletedTask;
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    await ImportJsonFileAsync<TEntity>(filePath);
+                }
+            }
+            catch (Exception x)
+            {
+                throw new ApplicationException($"Automatically imported seed file '{filePath}' has errors. Please fix it, delete it or override SeedAsync method in '{GetType().Name}' repository", x);
+            }
         }
 
         protected async Task ImportJsonFileAsync<TEntityImport>(string filePath = null)
@@ -62,15 +89,7 @@ namespace Detached.Modules.EntityFramework
         {
             if (string.IsNullOrWhiteSpace(filePath))
             {
-                string baseNamespace = GetType().Assembly.GetName().Name;
-
-                StringBuilder sb = new StringBuilder(GetType().FullName);
-                sb.Replace(baseNamespace, "");
-                sb.Replace(".", "/");
-                sb.Append(".json");
-                sb.Insert(0, ".");
-
-                filePath = sb.ToString();
+                filePath = GetDefaultImportFilePath();
             }
 
             using (Stream stream = File.OpenRead(filePath))
@@ -79,12 +98,27 @@ namespace Detached.Modules.EntityFramework
             }
         }
 
+        protected string GetDefaultImportFilePath()
+        {
+            string filePath;
+            string baseNamespace = GetType().Assembly.GetName().Name;
+
+            StringBuilder sb = new StringBuilder(typeof(TEntity).FullName);
+            sb.Replace(baseNamespace, "");
+            sb.Replace(".", "/");
+            sb.Append("Seed.json");
+            sb.Insert(0, ".");
+
+            filePath = sb.ToString();
+            return filePath;
+        }
+
         protected async Task ImportJsonResourceAsync<TEntityImport>(string resourcePath = null, Assembly assembly = null)
             where TEntityImport : class
         {
-            if(assembly == null)
+            if (assembly == null)
                 assembly = GetType().Assembly;
-            
+
             if (string.IsNullOrEmpty(resourcePath))
                 resourcePath = GetType().FullName + ".json";
 
