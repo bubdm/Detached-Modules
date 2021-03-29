@@ -100,25 +100,6 @@ For example, SeedFile. A tool looks for Components of type SeedFile and executes
 to the IServiceCollection instance, however a Seed File is a valid component and an useful part of an application.
 (More info on Components below).
 
-
-```csharp
-public class SeedFileComponent<TDbContext, TEntity> : SeedFileComponent
-        where TDbContext : DbContext
-        where TEntity : class
-{
-    public override Type DbContextType => typeof(TDbContext);
-
-    public override Type EntityType => typeof(TEntity);
-
-    public override async Task UpdateDataAsync(DbContext dbContext)
-    {
-        using (Stream fileStream = File.OpenRead(Path)) 
-        {
-            // this uses Detached.Mapper library! check it out.
-            await dbContext.ImportJsonAsync<TEntity>(fileStream);
-        }
-    }
-}
 ```
 ###### Annotations
 Components can be automatically added using Annotations. Annotations are Attributes that inherit IComponentType.
@@ -231,19 +212,6 @@ public class MyRepository : Repository<MyDbContext, MyEntity>
     }
 }
 ```
-
-###### Seed File Component
-This component uses [Detached.Mappers](https://github.com/leonardoporro/Detached-Mapper) library to import a json file.
-
-To use it, add the component specifying the path to the json file and the DbContext and Entity type.
-
-```csharp
-this.AddSeedFile<MyDbContext, MyEntity>("Modules/MyModule/DataAccess/MyEntitySeed.json");
-```
-(Json file must contain an array of MyEntity documents).
-
-To import all the seeds files in the module and its descendant, call DbContext.ApplySeedFilesAsync() extension method.
-Important: DbContext must be added inside the same module or a parent module of the seed files to apply.
 
 ## GraphQL Components (HotChocolate)
 Components for the awesome [HotChocolate] (https://github.com/ChilliCream/hotchocolate) library includes Mutation, Query and a general configuration 
