@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using static Detached.Modules.EntityFramework.Package;
 
 namespace Detached.Modules.EntityFramework
 {
@@ -14,7 +15,7 @@ namespace Detached.Modules.EntityFramework
         public ResourceSeed()
         {
             Assembly = GetType().Assembly;
-            ResourcePath = GetType().FullName + ".json";
+            ResourcePath = GetDefaultSeedResourceName(GetType(), typeof(TEntity));
         }
 
         public ResourceSeed(Assembly assembly, string resourcePath)

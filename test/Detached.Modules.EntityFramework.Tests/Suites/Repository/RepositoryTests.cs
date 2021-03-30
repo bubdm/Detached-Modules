@@ -22,7 +22,7 @@ namespace Detached.Modules.EntityFramework.Tests
             Module module = new Module();
 
             // GIVEN a db context
-            module.AddDbContext<RepositoryDbContext>(cfg =>
+            module.AddDbContext<TestDbContext>(cfg =>
             {
                 var connection = new SqliteConnection($"DataSource=file:TestRepository?mode=memory&cache=shared");
                 connection.Open();
@@ -37,10 +37,10 @@ namespace Detached.Modules.EntityFramework.Tests
             module.ConfigureServices(services, null, null);
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
-            RepositoryDbContext dbContext = serviceProvider.GetService<RepositoryDbContext>();
+            TestDbContext dbContext = serviceProvider.GetService<TestDbContext>();
 
             // THEN model configuration is applied
-            IEntityType entityType = dbContext.Model.FindEntityType(typeof(RepositoryDocument));
+            IEntityType entityType = dbContext.Model.FindEntityType(typeof(TestDocument));
             IProperty property = entityType.FindProperty("Id");
 
             Assert.Contains(property.GetAnnotations(), a => a.Name == "test annotation");
@@ -53,7 +53,7 @@ namespace Detached.Modules.EntityFramework.Tests
             Module module = new Module();
 
             // GIVEN a db context
-            module.AddDbContext<RepositoryDbContext>(cfg =>
+            module.AddDbContext<TestDbContext>(cfg =>
             {
                 var connection = new SqliteConnection($"DataSource=file:TestRepository?mode=memory&cache=shared");
                 connection.Open();
@@ -68,10 +68,10 @@ namespace Detached.Modules.EntityFramework.Tests
             module.ConfigureServices(services, null, null);
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
-            RepositoryDbContext dbContext = serviceProvider.GetService<RepositoryDbContext>();
+            TestDbContext dbContext = serviceProvider.GetService<TestDbContext>();
 
             // THEN mapper configuration is applied
-            ITypeOptions typeOptions = dbContext.GetInfrastructure().GetService<Mapper>().GetTypeOptions(typeof(RepositoryDocument));
+            ITypeOptions typeOptions = dbContext.GetInfrastructure().GetService<Mapper>().GetTypeOptions(typeof(TestDocument));
             Assert.True(typeOptions.GetMember("Name").IsKey);
         }
 
@@ -82,7 +82,7 @@ namespace Detached.Modules.EntityFramework.Tests
             Module module = new Module();
 
             // GIVEN a db context
-            module.AddDbContext<RepositoryDbContext>(cfg =>
+            module.AddDbContext<TestDbContext>(cfg =>
             {
                 var connection = new SqliteConnection($"DataSource=file:TestRepository?mode=memory&cache=shared");
                 connection.Open();
@@ -97,7 +97,7 @@ namespace Detached.Modules.EntityFramework.Tests
             module.ConfigureServices(services, null, null);
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
-            RepositoryDbContext dbContext = serviceProvider.GetService<RepositoryDbContext>();
+            TestDbContext dbContext = serviceProvider.GetService<TestDbContext>();
 
             // AND seed is executed
             await dbContext.Database.EnsureCreatedAsync();

@@ -20,7 +20,7 @@ namespace Detached.Modules.EntityFramework.Tests
             Module module = new Module();
 
             // GIVEN a db context
-            module.AddDbContext<SeedingDbContext>(cfg =>
+            module.AddDbContext<TestDbContext>(cfg =>
             {
                 var connection = new SqliteConnection($"DataSource=file:TestSeedFiles?mode=memory&cache=shared");
                 connection.Open();
@@ -36,12 +36,12 @@ namespace Detached.Modules.EntityFramework.Tests
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
             // WHEN the context is set up
-            SeedingDbContext dbContext = serviceProvider.GetService<SeedingDbContext>();
+            TestDbContext dbContext = serviceProvider.GetService<TestDbContext>();
             await dbContext.Database.EnsureCreatedAsync();
             await dbContext.SeedAsync();
 
             // THEN file was imported
-            List<SeedingDocument> imported = await dbContext.Documents.ToListAsync();
+            List<TestDocument> imported = await dbContext.Documents.ToListAsync();
             Assert.NotNull(imported);
             Assert.Contains(imported, x => x.Id == 1);
             Assert.Contains(imported, x => x.Id == 2);
@@ -55,7 +55,7 @@ namespace Detached.Modules.EntityFramework.Tests
             Module module = new Module();
 
             // GIVEN a db context
-            module.AddDbContext<SeedingDbContext>(cfg =>
+            module.AddDbContext<TestDbContext>(cfg =>
             {
                 var connection = new SqliteConnection($"DataSource=file:TestSeedFiles?mode=memory&cache=shared");
                 connection.Open();
@@ -71,12 +71,12 @@ namespace Detached.Modules.EntityFramework.Tests
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
             // WHEN the context is set up
-            SeedingDbContext dbContext = serviceProvider.GetService<SeedingDbContext>();
+            TestDbContext dbContext = serviceProvider.GetService<TestDbContext>();
             await dbContext.Database.EnsureCreatedAsync();
             await dbContext.SeedAsync();
 
             // THEN file was imported
-            List<SeedingDocument> imported = await dbContext.Documents.ToListAsync();
+            List<TestDocument> imported = await dbContext.Documents.ToListAsync();
             Assert.NotNull(imported);
             Assert.Contains(imported, x => x.Id == 1);
             Assert.Contains(imported, x => x.Id == 2);

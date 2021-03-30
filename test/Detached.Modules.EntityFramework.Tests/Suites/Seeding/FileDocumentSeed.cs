@@ -2,7 +2,7 @@
 
 namespace Detached.Modules.EntityFramework.Tests.Suites.Seeding
 {
-    public class FileDocumentSeed : FileSeed<SeedingDbContext, SeedingDocument>
+    public class FileDocumentSeed : FileSeed<TestDbContext, TestDocument>
     {
     }
 }

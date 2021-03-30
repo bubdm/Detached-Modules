@@ -1,8 +1,8 @@
 ﻿using Detached.Mappers.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
+using static Detached.Modules.EntityFramework.Package;
 
 namespace Detached.Modules.EntityFramework
 {
@@ -12,15 +12,7 @@ namespace Detached.Modules.EntityFramework
     {
         public FileSeed()
         {
-            string baseNamespace = GetType().Assembly.GetName().Name;
-
-            StringBuilder sb = new StringBuilder(GetType().FullName);
-            sb.Replace(baseNamespace, "");
-            sb.Replace(".", "/");
-            sb.Append(".json");
-            sb.Insert(0, ".");
-
-            FilePath = sb.ToString();
+            FilePath = GetDefaultSeedFilePath(GetType(), typeof(TEntity));
         }
 
         public FileSeed(string filePath)

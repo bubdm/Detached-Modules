@@ -6,8 +6,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
+using static Detached.Modules.EntityFramework.Package;
 
 namespace Detached.Modules.EntityFramework
 {
@@ -69,7 +69,7 @@ namespace Detached.Modules.EntityFramework
 
         public override async Task SeedAsync()
         {
-            string filePath = GetDefaultImportFilePath();
+            string filePath = GetDefaultSeedFilePath(GetType(), typeof(TEntity));
 
             try
             {
@@ -89,28 +89,13 @@ namespace Detached.Modules.EntityFramework
         {
             if (string.IsNullOrWhiteSpace(filePath))
             {
-                filePath = GetDefaultImportFilePath();
+                filePath = GetDefaultSeedFilePath(GetType(), typeof(TEntity));
             }
 
             using (Stream stream = File.OpenRead(filePath))
             {
                 await DbContext.ImportJsonAsync<TEntity>(stream);
             }
-        }
-
-        protected string GetDefaultImportFilePath()
-        {
-            string filePath;
-            string baseNamespace = GetType().Assembly.GetName().Name;
-
-            StringBuilder sb = new StringBuilder(typeof(TEntity).FullName);
-            sb.Replace(baseNamespace, "");
-            sb.Replace(".", "/");
-            sb.Append("Seed.json");
-            sb.Insert(0, ".");
-
-            filePath = sb.ToString();
-            return filePath;
         }
 
         protected async Task ImportJsonResourceAsync<TEntityImport>(string resourcePath = null, Assembly assembly = null)

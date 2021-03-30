@@ -6,9 +6,9 @@ namespace Detached.Modules.EntityFramework.Tests.Suites.Repository.Fixture
 {
     public partial class PlainRepository
     {
-        readonly RepositoryDbContext _testDbContext;
+        readonly TestDbContext _testDbContext;
 
-        public PlainRepository(RepositoryDbContext testDbContext)
+        public PlainRepository(TestDbContext testDbContext)
         {
             _testDbContext = testDbContext;
         }
@@ -16,13 +16,13 @@ namespace Detached.Modules.EntityFramework.Tests.Suites.Repository.Fixture
         public void ConfigureModel(ModelBuilder modelBuilder)
         {
             // apply a random annotation to check that this was executed.
-            modelBuilder.Entity<RepositoryDocument>().Property(t => t.Id).HasAnnotation("test annotation", true);
+            modelBuilder.Entity<TestDocument>().Property(t => t.Id).HasAnnotation("test annotation", true);
         }
 
         public void ConfigureMapper(MapperOptions mapperOptions)
         {
             // apply a random annotation to check that this was executed.
-            mapperOptions.Configure<RepositoryDocument>().Member(t => t.Name).IsKey();
+            mapperOptions.Configure<TestDocument>().Member(t => t.Name).IsKey();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Detached.Modules.EntityFramework.Tests.Suites.Seeding
 {
-    public class ResourceDocumentSeed : ResourceSeed<SeedingDbContext, SeedingDocument>
+    public class ResourceDocumentSeed : ResourceSeed<TestDbContext, TestDocument>
     {
     }
 }

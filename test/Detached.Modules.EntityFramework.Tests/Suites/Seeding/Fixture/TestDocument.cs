@@ -1,6 +1,6 @@
 ﻿namespace Detached.Modules.EntityFramework.Tests.Suites.Seeding.Fixture
 {
-    public class SeedingDocument
+    public class TestDocument
     {
         public int Id { get; set; }
 

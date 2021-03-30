@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Detached.Modules.EntityFramework.Tests.Suites.Repository.Fixture
 {
-    public partial class InheritedRepository : Repository<RepositoryDbContext, RepositoryDocument>
+    public partial class InheritedRepository : Repository<TestDbContext, TestDocument>
     {
-        public InheritedRepository(RepositoryDbContext dbContext)
+        public InheritedRepository(TestDbContext dbContext)
             : base(dbContext)
         {
         }
