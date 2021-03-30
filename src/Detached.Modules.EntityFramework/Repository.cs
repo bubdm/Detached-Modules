@@ -98,6 +98,11 @@ namespace Detached.Modules.EntityFramework
             }
         }
 
+        public override void ConfigureModel(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TEntity>();
+        }
+
         protected async Task ImportJsonResourceAsync<TEntityImport>(string resourcePath = null, Assembly assembly = null)
             where TEntityImport : class
         {
