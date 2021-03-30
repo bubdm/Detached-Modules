@@ -8,7 +8,7 @@ namespace Detached.Modules.Annotations
     {
         public void AddToModule(Type type, Module module)
         {
-            module.Components.Add((IComponent)Activator.CreateInstance(typeof(OptionsComponent<>).MakeGenericType(type)));
+            module.Components.Add((IComponent)Activator.CreateInstance(typeof(OptionsComponent<>).MakeGenericType(type), new object[] { null }));
         }
     }
 }

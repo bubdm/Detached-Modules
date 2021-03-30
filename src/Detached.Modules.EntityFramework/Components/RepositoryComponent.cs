@@ -40,8 +40,6 @@ namespace Detached.Modules.EntityFramework
             SeedAsyncMethodInfo = repositoryType.GetMethod("SeedAsync", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         }
 
-        public Module Module { get; set; }
-
         public Type DbContextType { get; set; }
 
         public Type RepositoryType { get; set; }

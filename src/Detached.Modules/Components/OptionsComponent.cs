@@ -12,7 +12,7 @@ namespace Detached.Modules.Components
             Name = name ?? typeof(TOptions).Name.Replace("Options", "");
         }
  
-        public string Name { get; set; }
+        public string Name { get; }
 
         public void ConfigureServices(Module module, IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
         {

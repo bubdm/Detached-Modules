@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Detached.Modules.Annotations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
@@ -45,6 +46,26 @@ namespace Detached.Modules.Tests
             Assert.Equal("this is the value 2", testOptions.OptionValue2);
         }
 
+        [Fact]
+        public void TestOptionsAnnotation()
+        {
+            IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("Options.json").Build();
+
+            Module root = new Module() { Name = "Root" };
+            root.AddComponents(x => x.Namespace.StartsWith("Detached.Modules.Tests"), GetType().Assembly);
+
+            IServiceCollection services = new ServiceCollection();
+            root.ConfigureServices(services, configuration, null);
+
+            TestOptions testOptions = root.GetOptions<TestOptions>(configuration);
+
+            Assert.NotNull(testOptions);
+            Assert.Equal("this is the value 1", testOptions.OptionValue1);
+            Assert.Equal("this is the value 2", testOptions.OptionValue2);
+        }
+
+
+        [OptionsComponent]
         public class TestOptions
         {
             public string OptionValue1 { get; set; }
