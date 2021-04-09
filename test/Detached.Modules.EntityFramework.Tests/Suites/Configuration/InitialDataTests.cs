@@ -1,6 +1,5 @@
-﻿using Detached.Modules.EntityFramework.Extensions;
-using Detached.Modules.EntityFramework.Tests.Suites.Seeding;
-using Detached.Modules.EntityFramework.Tests.Suites.Seeding.Fixture;
+﻿using Detached.Modules.EntityFramework.Components;
+using Detached.Modules.EntityFramework.Extensions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,9 +8,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Detached.Modules.EntityFramework.Tests
+namespace Detached.Modules.EntityFramework.Tests.Suites.Configuration
 {
-    public class SeedingTests
+    public class InitialDataTests
     {
         [Fact]
         public async Task TestResourceSeed()
@@ -27,7 +26,7 @@ namespace Detached.Modules.EntityFramework.Tests
                 cfg.UseSqlite(connection);
             });
 
-            module.AddSeed<ResourceDocumentSeed>();
+            module.AddDbContextConfiguration<TestDbContext, ResourceTestDbContextConfiguration>();
 
             // WHEN the application is built
             IServiceCollection services = new ServiceCollection();
@@ -38,7 +37,7 @@ namespace Detached.Modules.EntityFramework.Tests
             // WHEN the context is set up
             TestDbContext dbContext = serviceProvider.GetService<TestDbContext>();
             await dbContext.Database.EnsureCreatedAsync();
-            await dbContext.SeedAsync();
+            await dbContext.InitializeDataAsync();
 
             // THEN file was imported
             List<TestDocument> imported = await dbContext.Documents.ToListAsync();
@@ -62,7 +61,7 @@ namespace Detached.Modules.EntityFramework.Tests
                 cfg.UseSqlite(connection);
             });
 
-            module.AddSeed<FileDocumentSeed>();
+            module.AddDbContextConfiguration<TestDbContext, FileTestDbContextConfiguration>();
 
             // WHEN the application is built
             IServiceCollection services = new ServiceCollection();
@@ -73,7 +72,7 @@ namespace Detached.Modules.EntityFramework.Tests
             // WHEN the context is set up
             TestDbContext dbContext = serviceProvider.GetService<TestDbContext>();
             await dbContext.Database.EnsureCreatedAsync();
-            await dbContext.SeedAsync();
+            await dbContext.InitializeDataAsync();
 
             // THEN file was imported
             List<TestDocument> imported = await dbContext.Documents.ToListAsync();
@@ -81,6 +80,22 @@ namespace Detached.Modules.EntityFramework.Tests
             Assert.Contains(imported, x => x.Id == 1);
             Assert.Contains(imported, x => x.Id == 2);
             Assert.Contains(imported, x => x.Id == 3);
+        }
+
+        public class FileTestDbContextConfiguration : DbContextConfiguration
+        {
+            public override async Task InitializeDataAsync(DbContext dbContext)
+            {
+                await MapFileAsync<TestDocument>(dbContext);
+            }
+        }
+
+        public class ResourceTestDbContextConfiguration : DbContextConfiguration
+        {
+            public override async Task InitializeDataAsync(DbContext dbContext)
+            {
+                await MapResourceAsync<TestDocument>(dbContext);
+            }
         }
     }
 }

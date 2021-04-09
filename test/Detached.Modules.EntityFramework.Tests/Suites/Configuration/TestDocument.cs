@@ -1,4 +1,4 @@
-﻿namespace Detached.Modules.EntityFramework.Tests.Suites.Seeding.Fixture
+﻿namespace Detached.Modules.EntityFramework.Tests.Suites.Configuration
 {
     public class TestDocument
     {

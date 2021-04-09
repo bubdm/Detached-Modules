@@ -63,7 +63,7 @@ public class UserManagerModule : Module
 {
     public UserManagerModule()
     {
-        this.AddRepository<UserRepository>();
+        this.AddDbContextConfiguration<ModuleDbContextConfiguration>();
         this.AddOptions<UserManagerOptions>();
         this.AddMutation<UserMutation>();
         this.AddQuery<UserQuery>();
@@ -145,72 +145,41 @@ module.AddDbContext<MyDbContext>(cfg =>
 
 The DbContext will be registered to the IServiceCollection, so in order to use it just inject it as usual.
 
-###### Mapping Component
-Allows Modules and child Modules to add/modify/configure entities for a given DbContext and MappingOptions for [Detached.Mappers](https://github.com/leonardoporro/Detached-Mapper).
-To define a mapping add any of ConfigureModel(ModelBuilder) or ConfigureMapper(MapperOptions) methods, and it is recommended but not 
-mandatory to inherit from Mapping class.
+###### DbContext Configuration Component
+Allows Modules to configure the DbContext model and mapper (see [Detached.Mappers](https://github.com/leonardoporro/Detached-Mapper)).
+Also provides data seeding feature using InitializeDataAsync extension method.
+The configuration must be defined on a class and can be added to a Module using AddDbContextConfiguration or automatically, adding [DbContextConfigurationComponent]
+annotation.
+This is how a DbContext configuration class looks like:
 
 ```csharp
-public class MyMapping
+[DbContextConfigurationComponent(typeof(MainDbContext))] // this is the annotation to auto-add the component using Module.AddAllComponents().
+public class SecurityDbContextConfiguration : DbContextConfiguration // inherit from DbContextConfiguration is recommended but not required.
 {
-    public void ConfigureModel(ModelBuilder modelBuilder)
+    // use ConfigureModel to add/customize entities to the db context
+    // this is called when DbContext is initialized
+    public override void ConfigureModel(DbContext dbContext, ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TestMappingEntity>().Property(t => t.Id).HasAnnotation("test annotation", true);
+        modelBuilder.Entity<User>().ToTable("Users");
+        modelBuilder.Entity<Role>().ToTable("Roles");
     }
 
-    public void ConfigureMapper(MapperOptions mapperOptions)
+    // use ConfigureMapper to change mapping options (Detached.Mappers only)
+    // this is called when DbContext is initialized
+    public override void ConfigureMapper(DbContext dbContext, MapperOptions mapperOptions)
     {
-        mapperOptions.Configure<TestMappingEntity>().Member(t => t.Name).IsKey();
+        mapperOptions.Configure<User>().TypeOptions.Annotations.Add("custom annotation", true);
+    }
+
+    // use InitializeDataAsync to populate the database
+    // this is called when you manually invoke DbContext.InitializeDataAsync();
+    public override async Task InitializeDataAsync(DbContext dbContext)
+    {
+        await MapFileAsync<User>(dbContext, "path/to/file.json"); // import entities from a file
+        await MapResourceAsync<Role>(dbContext, "namespace.namespace.resource.json"); // import entities from an embedded resource
     }
 }
 
-```
-Then, call AddMapping on the Module that requires it, passing the mapping type and the type of DbContext to apply the mapping to it.
-
-```csharp
-module.AddMapping<MyDbContext, MyMapping>();
-```
-###### Repository Component
-Registers the given class to the IServiceCollection container to be injected later
-and also allows adding the ConfigureModel(ModelBuilder) or ConfigureMapper(MapperOptions) methods, so a separate Mapping is not needed.
-Repositories requires a constructor with a single parameter of the type of the DbContext that the repository is going to work on. This parameter
-is used to instantiate the repository and to infer the type of DbContext to process when applying the mappings.
-In order to create a repository, add a class, create a constructor with a single parameter receiving the DbContext and (optionally) add ConfigureModel(ModelBuilder) and/or ConfigureMapper(MapperOptions) methods.
-Inheriting from Repository<,> is recommended but not mandatory.
-When inheriting from Repository<,> the entity passed as the second generic argument is automatically added to the DbContext model, in all the other
-cases the DbSet<MyEntity> property must be added or the call to modelBuilder.Entity<MyEntity> must be made.
-
-```csharp
-public class MyRepository
-{
-    public MyRepository(MyDbContext dbContext)
-    {
-    }
-
-    public void ConfigureModel(ModelBuilder modelBuilder)
-    {
-    }
-
-    public void ConfigureMapper(MapperOptions mapperOptions)
-    {
-    }
-}
-
-public class MyRepository : Repository<MyDbContext, MyEntity>
-{
-    public MyRepository(MyDbContext dbContext)
-        : base(dbContext)
-    {
-    }
-
-    public override void ConfigureModel(ModelBuilder modelBuilder)
-    {
-    }
-
-    public override void ConfigureMapper(MapperOptions mapperOptions)
-    {
-    }
-}
 ```
 
 ## GraphQL Components (HotChocolate)

@@ -18,10 +18,5 @@ namespace Detached.Modules.RestSample.Modules.Security.DataAccess
         {
             return await _dbContext.Set<User>().ToListAsync();
         }
-
-        public void ConfigureModel(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<User>();
-        }
     }
 }

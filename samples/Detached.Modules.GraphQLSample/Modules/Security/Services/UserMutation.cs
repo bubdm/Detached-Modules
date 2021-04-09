@@ -1,4 +1,5 @@
-﻿using Detached.Modules.GraphQLSample.Modules.Security.DataAccess;
+﻿using Detached.Modules.GraphQL.Annotations;
+using Detached.Modules.GraphQLSample.Modules.Security.DataAccess;
 using Detached.Modules.GraphQLSample.Modules.Security.Models;
 using Detached.Modules.GraphQLSample.Modules.Security.Services.Input;
 using HotChocolate;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Detached.Modules.GraphQLSample.Modules.Security.Services
 {
+    [MutationComponent]
     public class UserMutation
     {
         public async Task<User> UserCreateAsync([Service] UserRepository userRepo, CreateUserInput createUserInput)

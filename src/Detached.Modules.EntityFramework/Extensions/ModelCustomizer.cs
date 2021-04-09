@@ -13,24 +13,13 @@ namespace Detached.Modules.EntityFramework.DbContextExtension
             _module = module;
         }
 
-        public void Customize(ModelBuilder modelBuilder, DbContext context)
+        public void Customize(ModelBuilder modelBuilder, DbContext dbContext)
         {
             foreach (IComponent component in _module.GetComponents())
             {
-                switch (component)
+                if (component is DbContextConfigurationComponent dbContextConfig)
                 {
-                    case RepositoryComponent repo:
-                        if (repo.DbContextType == context.GetType())
-                        {
-                            repo.ConfigureModel(context, modelBuilder);
-                        }
-                        break;
-                    case MappingComponent mapping:
-                        if (mapping.DbContextType == context.GetType())
-                        {
-                            mapping.ConfigureModel(modelBuilder);
-                        }
-                        break;
+                    dbContextConfig.ConfigureModel(dbContext, modelBuilder);
                 }
             }
         }

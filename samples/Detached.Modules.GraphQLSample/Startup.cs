@@ -66,7 +66,7 @@ namespace Detached.Modules.GraphQLSample
         {
             await dbContext.Database.EnsureDeletedAsync();
             await dbContext.Database.EnsureCreatedAsync();
-            await dbContext.SeedAsync();
+            await dbContext.InitializeDataAsync();
         }
     }
 }

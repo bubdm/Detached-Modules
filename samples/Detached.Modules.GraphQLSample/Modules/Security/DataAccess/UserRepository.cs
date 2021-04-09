@@ -1,12 +1,12 @@
-﻿using Detached.Mappers.EntityFramework;
+﻿using Detached.Modules.Annotations;
 using Detached.Modules.GraphQLSample.Modules.Security.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Detached.Modules.GraphQLSample.Modules.Security.DataAccess
 {
+    [ServiceComponent]
     public class UserRepository
     {
         readonly MainDbContext _dbContext;
@@ -27,19 +27,6 @@ namespace Detached.Modules.GraphQLSample.Modules.Security.DataAccess
             await _dbContext.SaveChangesAsync();
 
             return user;
-        }
-
-        public void ConfigureModel(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<User>();
-        }   
-
-        public async Task SeedAsync()
-        {
-            using (Stream stream = File.OpenRead("Modules/Security/DataAccess/RoleSeed.json"))
-            {
-                await _dbContext.ImportJsonAsync<Role>(stream);
-            }
         }
     }
 }

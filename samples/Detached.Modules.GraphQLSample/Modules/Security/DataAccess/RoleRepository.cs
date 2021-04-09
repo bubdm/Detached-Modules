@@ -1,4 +1,4 @@
-﻿using Detached.Modules.EntityFramework.Annotations;
+﻿using Detached.Modules.Annotations;
 using Detached.Modules.GraphQLSample.Modules.Security.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Detached.Modules.GraphQLSample.Modules.Security.DataAccess
 {
-    [RepositoryComponent]
+    [ServiceComponent]
     public class RoleRepository
     {
         readonly MainDbContext _dbContext;

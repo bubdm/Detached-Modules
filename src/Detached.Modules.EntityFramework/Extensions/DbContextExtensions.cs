@@ -7,20 +7,15 @@ namespace Detached.Modules.EntityFramework.Extensions
 {
     public static class DbContextExtensions
     {
-        public static async Task SeedAsync(this DbContext dbContext)
+        public static async Task InitializeDataAsync(this DbContext dbContext)
         {
             Module module = dbContext.GetService<Module>();
 
             foreach (IComponent component in module.GetComponents())
             {
-                switch(component)
+                if (component is DbContextConfigurationComponent dbContextConfig)
                 {
-                    case SeedComponent seed:
-                        await seed.SeedAsync(dbContext);
-                        break;
-                    case RepositoryComponent repo:
-                        await repo.SeedAsync(dbContext);
-                        break;
+                    await dbContextConfig.InitializeDataAsync(dbContext);
                 }
             }
 

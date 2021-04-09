@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Detached.Modules.EntityFramework.Tests.Suites.Repository.Fixture
+namespace Detached.Modules.EntityFramework.Tests.Suites.Configuration
 {
     public class TestDbContext : DbContext
     {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>5.0.10</Version>
+    <Version>5.0.11</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/leonardoporro/Detached-Modules</PackageProjectUrl>
     <Description>Modules are a very opinionated way to better organize small or medium aspnet or similar applications.
@@ -33,7 +33,8 @@ Custom Components may also provide extra functionality.</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Detached.Mappers.EntityFramework" Version="5.0.15" />
+    <PackageReference Include="Detached.Mappers.EntityFramework" Version="5.0.16" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
   </ItemGroup>
 

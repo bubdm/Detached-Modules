@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Suites\Seeding\TestDocumentData.json">
+    <EmbeddedResource Include="Suites\Configuration\TestDocumentData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
@@ -29,12 +29,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Detached.Modules.EntityFramework\Detached.Modules.EntityFramework.csproj" />
     <ProjectReference Include="..\..\src\Detached.Modules\Detached.Modules.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Suites\Repository\Fixture\TestDocumentData.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
