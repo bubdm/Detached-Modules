@@ -13,7 +13,7 @@ namespace Detached.Modules.Annotations
 
         public void AddToModule(Type type, Module module)
         {
-            module.Components.Add(new ServiceComponent(new ServiceDescriptor(type, ContractType ?? type, LifeTime)));
+            module.Components.Add(new ServiceComponent(new ServiceDescriptor(ContractType ?? type, type, LifeTime)));
         }
     }
 }

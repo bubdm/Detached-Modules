@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>5.0.7</Version>
+    <Version>5.0.8</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/leonardoporro/Detached-Modules</PackageProjectUrl>
     <Authors>Leonardo Porro</Authors>
