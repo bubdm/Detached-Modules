@@ -45,6 +45,7 @@ namespace Detached.Modules.GraphQL
 
             builder.UseField<InputValidationMiddleware>();
             builder.Services.AddErrorFilter<GraphQLErrorFilter>();
+            builder.Services.AddLogging(); 
 
             return builder;
         }
