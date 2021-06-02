@@ -13,12 +13,14 @@ namespace Detached.Modules
             string messageTemplate, 
             Dictionary<string, object> arguments = null,
             string debugMessage = null,
+            string field = null,
             Exception innerException = null)
             : base(GetMessage(messageTemplate, arguments), innerException)
         {
             Key = key;
             MessageTemplate = messageTemplate;
             Arguments = arguments;
+            Field = field;
             DebugMessage = debugMessage;
         }
  
@@ -26,6 +28,8 @@ namespace Detached.Modules
             : base(info, context)
         {
         }
+
+        public string Field { get; }
 
         public string Key { get; }
 

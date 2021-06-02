@@ -25,6 +25,7 @@ namespace Detached.Modules.GraphQL.Filters
             string key = null;
             string messageTemplate = null;
             Dictionary<string, object> arguments = null;
+            string field = null;
             string debugMessage = null;
 
             if (error.Exception != null)
@@ -35,6 +36,7 @@ namespace Detached.Modules.GraphQL.Filters
                     key = errorException.Key;
                     messageTemplate = errorException.MessageTemplate;
                     arguments = errorException.Arguments;
+                    field = errorException.Field;
                     debugMessage = errorException.DebugMessage;
                 }
                 else
@@ -51,22 +53,12 @@ namespace Detached.Modules.GraphQL.Filters
                         { nameof(key), key },
                         { nameof(messageTemplate), messageTemplate },
                         { nameof(arguments), arguments },
-                        { nameof(debugMessage), debugMessage }
+                        { nameof(debugMessage), debugMessage },
+                        { nameof(field), field }
                     });
             }
 
-            string errorBody = JsonSerializer.Serialize(new
-            {
-                error.Code,
-                error.Extensions,
-                error.Message,
-                error.Path
-            }, _errorJsonOptions);
-
-            if (error.Exception == null)
-                _logger.LogError(errorBody);
-            else
-                _logger.LogError(error.Exception, errorBody);
+             _logger.LogError(error.Exception, "Request failed");
 
             return error;
         }
